@@ -1,14 +1,64 @@
 # app/greedy_optimizer.py
-# 현재 상태에서 실제로 배울 수 있는 비급만 후보로 삼아 반복 선택하는 greedy 최적화 엔진입니다.
+# 단계형 A/B/C 기반 greedy 최적화 엔진입니다.
 
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import List, Dict, Tuple
+from typing import Dict, List, Optional, Tuple
 from collections import defaultdict
 
-from app.optimizer import StatBlock, GoalConfig, RarityConstraint, clone_state, apply_group_levels, STAT_ORDER
+from app.optimizer import (
+    STAT_ORDER,
+    StatBlock,
+    GoalConfig,
+    RarityConstraint,
+    clone_state,
+    apply_group_levels,
+)
 from app.snapshot import BookAction, check_needs
+
+
+C_GAP_THRESHOLD = 30
+
+LEVEL_CANDIDATES = [1, 2, 3, 5, 10]
+
+LOW_CURRENT_RARITIES = {"기초", "진급", "진계", "상승"}
+LOW_POTENTIAL_RARITIES_1 = {"진급", "진계"}
+LOW_POTENTIAL_RARITIES_2 = {"상승"}
+MAIN_POTENTIAL_RARITIES = {"상승", "비전", "정극", "최상급", "절세"}
+
+RARITY_RANK = {
+    "기초": 1,
+    "진급": 2,
+    "진계": 2,
+    "상승": 3,
+    "비전": 4,
+    "정극": 5,
+    "최상급": 5,
+    "절세": 6,
+}
+
+RARITY_MIN_ACTIVE_STAT = {
+    "기초": 0,
+    "진급": 10,
+    "진계": 10,
+    "상승": 20,
+    "비전": 40,
+    "정극": 50,
+    "최상급": 50,
+    "절세": 65,
+}
+
+RARITY_MAX_EXPERIENCE_QUANTITY = {
+    "기초": 12,
+    "진급": 10,
+    "진계": 10,
+    "상승": 8,
+    "비전": 6,
+    "정극": 4,
+    "최상급": 4,
+    "절세": 2,
+}
 
 
 @dataclass
@@ -22,284 +72,579 @@ class GreedyOptimizationResult:
     message: str = ""
 
 
-def _goal_reached(state: StatBlock, goal: GoalConfig) -> bool:
-    for stat in STAT_ORDER:
-        if not goal.enabled.get(stat, True):
-            continue
+def _enabled_stats(goal: GoalConfig) -> list[str]:
+    return [s for s in STAT_ORDER if goal.enabled.get(s, True)]
 
+
+def _abc(state: StatBlock, goal: GoalConfig) -> dict:
+    return {
+        stat: {
+            "A": max(0, goal.target_current.get(stat, 0) - state.current.get(stat, 0)),
+            "B": max(0, goal.target_potential.get(stat, 0) - state.potential.get(stat, 0)),
+            "C": max(0, state.potential.get(stat, 0) - state.current.get(stat, 0)),
+        }
+        for stat in _enabled_stats(goal)
+    }
+
+
+def _goal_reached(state: StatBlock, goal: GoalConfig) -> bool:
+    for stat in _enabled_stats(goal):
         if state.current.get(stat, 0) < goal.target_current.get(stat, 0):
             return False
-
         if state.potential.get(stat, 0) < goal.target_potential.get(stat, 0):
             return False
-
     return True
 
 
 def _deficit_score(state: StatBlock, goal: GoalConfig) -> int:
-    """
-    목표까지 남은 부족량 점수입니다.
-    낮을수록 좋습니다.
-    """
-    score = 0
-
-    for stat in STAT_ORDER:
-        if not goal.enabled.get(stat, True):
-            continue
-
-        score += max(0, goal.target_current.get(stat, 0) - state.current.get(stat, 0))
-        score += max(0, goal.target_potential.get(stat, 0) - state.potential.get(stat, 0))
-
-    return score
+    total = 0
+    for stat in _enabled_stats(goal):
+        total += max(0, goal.target_current.get(stat, 0) - state.current.get(stat, 0))
+        total += max(0, goal.target_potential.get(stat, 0) - state.potential.get(stat, 0))
+    return total
 
 
 def _overshoot_score(state: StatBlock, goal: GoalConfig) -> int:
-    score = 0
-
-    for stat in STAT_ORDER:
-        if not goal.enabled.get(stat, True):
-            continue
-
-        score += max(0, state.current.get(stat, 0) - goal.target_current.get(stat, 0))
-        score += max(0, state.potential.get(stat, 0) - goal.target_potential.get(stat, 0))
-
-    return score
+    total = 0
+    for stat in _enabled_stats(goal):
+        total += max(0, state.current.get(stat, 0) - goal.target_current.get(stat, 0))
+        total += max(0, state.potential.get(stat, 0) - goal.target_potential.get(stat, 0))
+    return total
 
 
 def _state_valid(state: StatBlock) -> bool:
-    for stat in STAT_ORDER:
-        if state.current.get(stat, 0) > state.potential.get(stat, 0):
-            return False
-    return True
+    return all(state.current.get(stat, 0) <= state.potential.get(stat, 0) for stat in STAT_ORDER)
 
 
-def _candidate_score(
-        before: StatBlock,
-        after: StatBlock,
-        goal: GoalConfig,
-        skill,
-        levels: int,
-) -> Tuple[int, int, int, int]:
-    """
-    후보 정렬 점수입니다.
-    tuple은 큰 값이 우선입니다.
+def _rarity_allowed_by_min_stat(state: StatBlock, goal: GoalConfig, rare: str) -> bool:
+    min_value = RARITY_MIN_ACTIVE_STAT.get(rare, 0)
+    if min_value <= 0:
+        return True
 
-    1. 목표 부족량 감소량
-    2. 목표 항목에 직접 기여한 성장량
-    3. 낮은 희귀도 우선
-    4. 적은 오버슈트 우선
-    """
-    before_deficit = _deficit_score(before, goal)
-    after_deficit = _deficit_score(after, goal)
-    deficit_reduced = before_deficit - after_deficit
+    enabled = _enabled_stats(goal)
+    if not enabled:
+        return True
 
-    useful_gain = 0
-    for stat in STAT_ORDER:
-        if not goal.enabled.get(stat, True):
+    # 목표로 삼은 스탯 중 하나라도 최소 고려치에 도달하면 해당 등급을 후보로 본다.
+    return max(state.current.get(stat, 0) for stat in enabled) >= min_value
+
+
+def _rarity_hard_allowed(skill, rarity_constraint: RarityConstraint, used_books_by_rare: Dict[str, int]) -> bool:
+    rare = skill.rare
+    if not rarity_constraint.enabled.get(rare, True):
+        return False
+
+    hard_max = rarity_constraint.max_books.get(rare, 999999)
+    return used_books_by_rare[rare] < hard_max
+
+
+def _experience_penalty(rare: str, used_books_by_rare: Dict[str, int]) -> int:
+    base = RARITY_MAX_EXPERIENCE_QUANTITY.get(rare, 999999)
+    used_after = used_books_by_rare[rare] + 1
+
+    if used_after <= base:
+        return 0
+
+    # 기준권수 초과분은 강하게 벌점.
+    return (used_after - base) * 5000
+
+
+def _level_candidates(state: StatBlock, group, goal: GoalConfig, focus_stat: Optional[str] = None) -> list[int]:
+    candidates = set(LEVEL_CANDIDATES)
+
+    stats = [focus_stat] if focus_stat else _enabled_stats(goal)
+
+    for stat in stats:
+        if not stat:
             continue
 
+        dc = group.delta_current.get(stat, 0)
+        dp = group.delta_potential.get(stat, 0)
+
+        a = max(0, goal.target_current.get(stat, 0) - state.current.get(stat, 0))
+        b = max(0, goal.target_potential.get(stat, 0) - state.potential.get(stat, 0))
+        c = max(0, state.potential.get(stat, 0) - state.current.get(stat, 0))
+
+        if dc > 0 and a > 0:
+            candidates.add(max(1, min(10, (a + dc - 1) // dc)))
+
+        if dp > 0 and b > 0:
+            candidates.add(max(1, min(10, (b + dp - 1) // dp)))
+
+        if dc > 0 and c > C_GAP_THRESHOLD:
+            need = c - C_GAP_THRESHOLD
+            candidates.add(max(1, min(10, (need + dc - 1) // dc)))
+
+    return sorted(c for c in candidates if 1 <= c <= 10)
+
+
+def _progress(before: StatBlock, after: StatBlock, goal: GoalConfig) -> dict:
+    result = {
+        "A_reduced": 0,
+        "B_reduced": 0,
+        "C_reduced": 0,
+        "waste": 0,
+        "combo_A": 0,
+        "combo_B": 0,
+    }
+
+    before_abc = _abc(before, goal)
+    after_abc = _abc(after, goal)
+
+    for stat in _enabled_stats(goal):
+        a_red = before_abc[stat]["A"] - after_abc[stat]["A"]
+        b_red = before_abc[stat]["B"] - after_abc[stat]["B"]
+        c_red = before_abc[stat]["C"] - after_abc[stat]["C"]
+
+        if a_red > 0:
+            result["A_reduced"] += a_red
+            result["combo_A"] += 1
+
+        if b_red > 0:
+            result["B_reduced"] += b_red
+            result["combo_B"] += 1
+
+        if before_abc[stat]["C"] > C_GAP_THRESHOLD and c_red > 0:
+            result["C_reduced"] += c_red
+
+    for stat in STAT_ORDER:
         cur_gain = max(0, after.current.get(stat, 0) - before.current.get(stat, 0))
         pot_gain = max(0, after.potential.get(stat, 0) - before.potential.get(stat, 0))
 
-        # 목표를 이미 넘긴 항목의 성장은 낮게 봄
-        if before.current.get(stat, 0) < goal.target_current.get(stat, 0):
-            useful_gain += cur_gain * 2
-        if before.potential.get(stat, 0) < goal.target_potential.get(stat, 0):
-            useful_gain += pot_gain * 2
+        if not goal.enabled.get(stat, True):
+            result["waste"] += cur_gain + pot_gain
+            continue
 
-    rare_lv = getattr(skill, "rare_lv", 0)
-    over = _overshoot_score(after, goal)
+        if before.current.get(stat, 0) >= goal.target_current.get(stat, 0):
+            result["waste"] += cur_gain
 
-    # Python sort reverse=True 기준
-    return (
-        deficit_reduced * 1000,
-        useful_gain * 100,
-        -rare_lv * 50,
-        -over,
+        if before.potential.get(stat, 0) >= goal.target_potential.get(stat, 0):
+            result["waste"] += pot_gain
+
+    return result
+
+
+def _apply_candidate(state: StatBlock, group, levels: int) -> Optional[StatBlock]:
+    after = apply_group_levels(
+        state=state,
+        delta_current=group.delta_current,
+        delta_potential=group.delta_potential,
+        levels=levels,
+    )
+    if not _state_valid(after):
+        return None
+    return after
+
+
+def _make_action(group_index: int, skill_index: int, levels: int) -> BookAction:
+    return BookAction(
+        group_index=group_index,
+        book_no_in_group=1,
+        levels_used=levels,
+        default_skill_index=skill_index,
+        selected_skill_index=skill_index,
     )
 
 
-def optimize_greedy_actions(
-        initial_state: StatBlock,
-        goal: GoalConfig,
-        rarity_constraint: RarityConstraint,
-        groups,
-        max_iterations: int = 300,
-) -> GreedyOptimizationResult:
-    """
-    needs를 자연스럽게 반영하는 greedy 최적화입니다.
-
-    매 반복:
-    1. 현재 상태에서 needs를 만족하는 비급만 후보
-    2. 아직 사용하지 않은 실제 비급만 후보
-    3. 희귀도 제한을 넘지 않는 후보만 선택
-    4. 1~10단계 중 가장 점수가 좋은 사용량 선택
-    5. 상태 갱신 후 반복
-    """
-    state = clone_state(initial_state)
-    actions: List[BookAction] = []
-
-    used_skill_ids = set()
-    used_books_by_rare: Dict[str, int] = defaultdict(int)
-
-    # 희귀도 사용 금지/상한 초기화
-    for rare, enabled in rarity_constraint.enabled.items():
-        if not enabled:
-            # enabled False는 max 0과 동일하게 처리
-            rarity_constraint.max_books[rare] = 0
-
-    for _ in range(max_iterations):
-        if _goal_reached(state, goal):
-            return GreedyOptimizationResult(
-                success=True,
-                actions=actions,
-                final_state=state,
-                used_books_total=len(actions),
-                used_levels_total=sum(a.levels_used for a in actions),
-                overshoot_score=_overshoot_score(state, goal),
-                message="성공",
-            )
-
-        candidates = []
-
-        for group_index, group in enumerate(groups):
-            for skill_index, skill in enumerate(group.skills):
-                if skill.id in used_skill_ids:
-                    continue
-
-                rare = skill.rare
-                max_books = rarity_constraint.max_books.get(rare, 999999)
-                if used_books_by_rare[rare] >= max_books:
-                    continue
-
-                if not check_needs(state, skill):
-                    continue
-
-                # 이 비급을 1~10단계 중 몇 단계까지 읽을지 평가
-                best_for_skill = None
-
-                for levels in range(1, 11):
-                    after = apply_group_levels(
-                        state=state,
-                        delta_current=group.delta_current,
-                        delta_potential=group.delta_potential,
-                        levels=levels,
-                    )
-
-                    if not _state_valid(after):
-                        continue
-
-                    score = _candidate_score(
-                        before=state,
-                        after=after,
-                        goal=goal,
-                        skill=skill,
-                        levels=levels,
-                    )
-
-                    unlock_score = _need_unlock_score(
-                        before=state,
-                        after=after,
-                        goal=goal,
-                        groups=groups,
-                        used_skill_ids=used_skill_ids,
-                    )
-
-                    # 목표도 줄이지 못하고, needs 해금에도 도움 안 되면 제외
-                    if score[0] <= 0 and unlock_score <= 0:
-                        continue
-
-                    score = (
-                        score[0],
-                        unlock_score,
-                        score[1],
-                        score[2],
-                        score[3],
-                    )
-
-                    if best_for_skill is None or score > best_for_skill[0]:
-                        best_for_skill = (score, levels, after)
-
-                if best_for_skill is None:
-                    continue
-
-                score, levels, after = best_for_skill
-                candidates.append((score, group_index, skill_index, skill, levels, after))
-
-        if not candidates:
-            return GreedyOptimizationResult(
-                success=False,
-                actions=actions,
-                final_state=state,
-                used_books_total=len(actions),
-                used_levels_total=sum(a.levels_used for a in actions),
-                overshoot_score=_overshoot_score(state, goal),
-                message="현재 상태와 needs 조건에서 목표를 더 진행할 수 있는 비급이 없습니다.",
-            )
-
-        candidates.sort(key=lambda x: x[0], reverse=True)
-
-        _score, group_index, skill_index, skill, levels, after = candidates[0]
-
-        action = BookAction(
-            group_index=group_index,
-            book_no_in_group=1,
-            levels_used=levels,
-            default_skill_index=skill_index,
-            selected_skill_index=skill_index,
-        )
-
-        actions.append(action)
-        used_skill_ids.add(skill.id)
-        used_books_by_rare[skill.rare] += 1
-        state = after
-
+def _make_result(success: bool, actions: List[BookAction], state: StatBlock, goal: GoalConfig, message: str):
     return GreedyOptimizationResult(
-        success=False,
+        success=success,
         actions=actions,
         final_state=state,
         used_books_total=len(actions),
         used_levels_total=sum(a.levels_used for a in actions),
         overshoot_score=_overshoot_score(state, goal),
-        message="반복 한도 내에서 목표에 도달하지 못했습니다.",
+        message=message,
     )
 
 
-def _need_unlock_score(before: StatBlock, after: StatBlock, goal: GoalConfig, groups, used_skill_ids: set) -> int:
-    """
-    현재는 못 배우지만 목표 달성에 도움이 되는 비급들의 needs를
-    얼마나 풀어주는지 계산합니다.
-    """
-    score = 0
-
-    for group in groups:
-        for skill in group.skills:
+def _iter_usable_skills(
+    state: StatBlock,
+    goal: GoalConfig,
+    rarity_constraint: RarityConstraint,
+    groups,
+    used_skill_ids: set[int],
+    used_books_by_rare: Dict[str, int],
+):
+    for group_index, group in enumerate(groups):
+        for skill_index, skill in enumerate(group.skills):
             if skill.id in used_skill_ids:
                 continue
 
-            # 이 비급이 목표에 기여하는지 확인
-            useful = False
-            for stat in STAT_ORDER:
-                if not goal.enabled.get(stat, True):
-                    continue
-
-                if group.delta_current.get(stat, 0) > 0 and before.current.get(stat, 0) < goal.target_current.get(stat,
-                                                                                                                  0):
-                    useful = True
-
-                if group.delta_potential.get(stat, 0) > 0 and before.potential.get(stat, 0) < goal.target_potential.get(
-                        stat, 0):
-                    useful = True
-
-            if not useful:
+            if not _rarity_hard_allowed(skill, rarity_constraint, used_books_by_rare):
                 continue
 
-            # needs 부족분이 얼마나 줄었는지 계산
-            for stat, req in skill.need_current.items():
-                before_gap = max(0, req - before.current.get(stat, 0))
-                after_gap = max(0, req - after.current.get(stat, 0))
+            if not _rarity_allowed_by_min_stat(state, goal, skill.rare):
+                continue
 
-                if before_gap > after_gap:
-                    score += (before_gap - after_gap) * 500
+            if not check_needs(state, skill):
+                continue
 
-    return score
+            yield group_index, group, skill_index, skill
+
+
+def _select_reduce_c_gap(
+    state: StatBlock,
+    goal: GoalConfig,
+    rarity_constraint: RarityConstraint,
+    groups,
+    used_skill_ids: set[int],
+    used_books_by_rare: Dict[str, int],
+):
+    abc = _abc(state, goal)
+    c_targets = [(stat, v["C"]) for stat, v in abc.items() if v["C"] > C_GAP_THRESHOLD]
+
+    if not c_targets:
+        return None
+
+    c_targets.sort(key=lambda x: x[1], reverse=True)
+    focus_stat, _gap = c_targets[0]
+
+    candidates = []
+
+    for group_index, group, skill_index, skill in _iter_usable_skills(
+        state, goal, rarity_constraint, groups, used_skill_ids, used_books_by_rare
+    ):
+        if skill.rare not in LOW_CURRENT_RARITIES:
+            continue
+
+        if group.delta_current.get(focus_stat, 0) <= 0:
+            continue
+
+        for levels in _level_candidates(state, group, goal, focus_stat=focus_stat):
+            after = _apply_candidate(state, group, levels)
+            if after is None:
+                continue
+
+            p = _progress(state, after, goal)
+
+            if p["C_reduced"] <= 0:
+                continue
+
+            rare_rank = RARITY_RANK.get(skill.rare, 99)
+            penalty = _experience_penalty(skill.rare, used_books_by_rare)
+
+            score = (
+                p["C_reduced"] * 10000,
+                p["A_reduced"] * 2000,
+                -rare_rank * 1000,
+                -penalty,
+                -p["waste"] * 500,
+                -levels,
+            )
+            candidates.append((score, group_index, skill_index, skill, levels, after))
+
+    return max(candidates, key=lambda x: x[0]) if candidates else None
+
+
+def _select_low_rarity_potential(
+    state: StatBlock,
+    goal: GoalConfig,
+    rarity_constraint: RarityConstraint,
+    groups,
+    used_skill_ids: set[int],
+    used_books_by_rare: Dict[str, int],
+    allowed_rarities: set[str],
+):
+    candidates = []
+
+    for group_index, group, skill_index, skill in _iter_usable_skills(
+        state, goal, rarity_constraint, groups, used_skill_ids, used_books_by_rare
+    ):
+        if skill.rare not in allowed_rarities:
+            continue
+
+        # 목표 잠재력 B가 남아있는 스탯의 잠재력을 올리는 비급만.
+        useful_stats = []
+        for stat in _enabled_stats(goal):
+            if group.delta_potential.get(stat, 0) > 0:
+                b = max(0, goal.target_potential.get(stat, 0) - state.potential.get(stat, 0))
+                if b > 0:
+                    useful_stats.append(stat)
+
+        if not useful_stats:
+            continue
+
+        for levels in _level_candidates(state, group, goal):
+            after = _apply_candidate(state, group, levels)
+            if after is None:
+                continue
+
+            p = _progress(state, after, goal)
+            if p["B_reduced"] <= 0:
+                continue
+
+            rare_rank = RARITY_RANK.get(skill.rare, 99)
+            penalty = _experience_penalty(skill.rare, used_books_by_rare)
+
+            score = (
+                p["B_reduced"] * 10000,
+                p["combo_B"] * 2500,
+                p["A_reduced"] * 1000,
+                -rare_rank * 700,
+                -penalty,
+                -p["waste"] * 500,
+                -levels,
+            )
+            candidates.append((score, group_index, skill_index, skill, levels, after))
+
+    return max(candidates, key=lambda x: x[0]) if candidates else None
+
+
+def _select_main_potential(
+    state: StatBlock,
+    goal: GoalConfig,
+    rarity_constraint: RarityConstraint,
+    groups,
+    used_skill_ids: set[int],
+    used_books_by_rare: Dict[str, int],
+):
+    abc = _abc(state, goal)
+    b_targets = [(stat, v["B"]) for stat, v in abc.items() if v["B"] > 0]
+
+    if not b_targets:
+        return None
+
+    b_targets.sort(key=lambda x: x[1], reverse=True)
+    b1 = b_targets[0][0]
+    b2 = b_targets[1][0] if len(b_targets) > 1 else None
+    b3 = b_targets[2][0] if len(b_targets) > 2 else None
+
+    other_goals_done = all(stat == b1 or abc[stat]["A"] == 0 and abc[stat]["B"] == 0 for stat in abc)
+
+    candidates = []
+
+    for group_index, group, skill_index, skill in _iter_usable_skills(
+        state, goal, rarity_constraint, groups, used_skill_ids, used_books_by_rare
+    ):
+        if skill.rare not in MAIN_POTENTIAL_RARITIES:
+            continue
+
+        if group.delta_potential.get(b1, 0) <= 0:
+            continue
+
+        for levels in _level_candidates(state, group, goal, focus_stat=b1):
+            after = _apply_candidate(state, group, levels)
+            if after is None:
+                continue
+
+            p = _progress(state, after, goal)
+            if p["B_reduced"] <= 0:
+                continue
+
+            b1_gain = min(
+                group.delta_potential.get(b1, 0) * levels,
+                max(0, goal.target_potential.get(b1, 0) - state.potential.get(b1, 0)),
+            )
+
+            b2_gain = 0
+            b3_gain = 0
+            if b2:
+                b2_gain = min(
+                    group.delta_potential.get(b2, 0) * levels,
+                    max(0, goal.target_potential.get(b2, 0) - state.potential.get(b2, 0)),
+                )
+            if b3:
+                b3_gain = min(
+                    group.delta_potential.get(b3, 0) * levels,
+                    max(0, goal.target_potential.get(b3, 0) - state.potential.get(b3, 0)),
+                )
+
+            a_support = 0
+            for stat in _enabled_stats(goal):
+                if abc[stat]["A"] > 0 and group.delta_current.get(stat, 0) > 0:
+                    a_support += group.delta_current.get(stat, 0) * levels
+
+            rare_rank = RARITY_RANK.get(skill.rare, 99)
+            penalty = _experience_penalty(skill.rare, used_books_by_rare)
+
+            if other_goals_done:
+                score = (
+                    b1_gain * 20000,
+                    a_support * 2000,
+                    -rare_rank * 500,
+                    -penalty,
+                    -p["waste"] * 700,
+                    -levels,
+                )
+            else:
+                score = (
+                    b1_gain * 15000,
+                    b2_gain * 9000,
+                    b3_gain * 6000,
+                    a_support * 3000,
+                    p["combo_B"] * 2000,
+                    -rare_rank * 500,
+                    -penalty,
+                    -p["waste"] * 800,
+                    -levels,
+                )
+
+            candidates.append((score, group_index, skill_index, skill, levels, after))
+
+    return max(candidates, key=lambda x: x[0]) if candidates else None
+
+
+def _select_current_progress(
+    state: StatBlock,
+    goal: GoalConfig,
+    rarity_constraint: RarityConstraint,
+    groups,
+    used_skill_ids: set[int],
+    used_books_by_rare: Dict[str, int],
+):
+    abc = _abc(state, goal)
+    a_targets = [(stat, v["A"]) for stat, v in abc.items() if v["A"] > 0]
+
+    if not a_targets:
+        return None
+
+    a_targets.sort(key=lambda x: x[1], reverse=True)
+    a1 = a_targets[0][0]
+    a2 = a_targets[1][0] if len(a_targets) > 1 else None
+
+    candidates = []
+
+    for group_index, group, skill_index, skill in _iter_usable_skills(
+        state, goal, rarity_constraint, groups, used_skill_ids, used_books_by_rare
+    ):
+        if group.delta_current.get(a1, 0) <= 0:
+            continue
+
+        for levels in _level_candidates(state, group, goal, focus_stat=a1):
+            after = _apply_candidate(state, group, levels)
+            if after is None:
+                continue
+
+            p = _progress(state, after, goal)
+            if p["A_reduced"] <= 0:
+                continue
+
+            a1_gain = min(
+                group.delta_current.get(a1, 0) * levels,
+                max(0, goal.target_current.get(a1, 0) - state.current.get(a1, 0)),
+            )
+
+            a2_gain = 0
+            if a2:
+                a2_gain = min(
+                    group.delta_current.get(a2, 0) * levels,
+                    max(0, goal.target_current.get(a2, 0) - state.current.get(a2, 0)),
+                )
+
+            rare_rank = RARITY_RANK.get(skill.rare, 99)
+            penalty = _experience_penalty(skill.rare, used_books_by_rare)
+
+            score = (
+                a1_gain * 12000,
+                a2_gain * 7000,
+                p["combo_A"] * 2000,
+                p["B_reduced"] * 1000,
+                -rare_rank * 800,
+                -penalty,
+                -p["waste"] * 600,
+                -levels,
+            )
+            candidates.append((score, group_index, skill_index, skill, levels, after))
+
+    return max(candidates, key=lambda x: x[0]) if candidates else None
+
+
+def optimize_greedy_actions(
+    initial_state: StatBlock,
+    goal: GoalConfig,
+    rarity_constraint: RarityConstraint,
+    groups,
+    max_iterations: int = 300,
+) -> GreedyOptimizationResult:
+    state = clone_state(initial_state)
+    actions: List[BookAction] = []
+
+    used_skill_ids: set[int] = set()
+    used_books_by_rare: Dict[str, int] = defaultdict(int)
+
+    best_state = clone_state(state)
+    best_actions: List[BookAction] = []
+    best_deficit = _deficit_score(state, goal)
+
+    for _step in range(max_iterations):
+        if _goal_reached(state, goal):
+            return _make_result(True, actions, state, goal, "성공")
+
+        cur_deficit = _deficit_score(state, goal)
+        if cur_deficit < best_deficit:
+            best_deficit = cur_deficit
+            best_state = clone_state(state)
+            best_actions = list(actions)
+
+        chosen = None
+
+        # 1. C가 너무 큰 경우 저등급 현재값 비급으로 먼저 보정.
+        chosen = _select_reduce_c_gap(
+            state, goal, rarity_constraint, groups, used_skill_ids, used_books_by_rare
+        )
+
+        # 2. 진급/진계 잠재력 비급 선사용.
+        if chosen is None:
+            chosen = _select_low_rarity_potential(
+                state, goal, rarity_constraint, groups, used_skill_ids, used_books_by_rare, LOW_POTENTIAL_RARITIES_1
+            )
+
+        # 3. 상승 잠재력 비급 선사용.
+        if chosen is None:
+            chosen = _select_low_rarity_potential(
+                state, goal, rarity_constraint, groups, used_skill_ids, used_books_by_rare, LOW_POTENTIAL_RARITIES_2
+            )
+
+        # 4. B가 큰 스탯 기준 잠재력 확보.
+        if chosen is None:
+            chosen = _select_main_potential(
+                state, goal, rarity_constraint, groups, used_skill_ids, used_books_by_rare
+            )
+
+        # 5. 현재값 A 보강.
+        if chosen is None:
+            chosen = _select_current_progress(
+                state, goal, rarity_constraint, groups, used_skill_ids, used_books_by_rare
+            )
+
+        if chosen is None:
+            if best_actions:
+                return _make_result(
+                    False,
+                    best_actions,
+                    best_state,
+                    goal,
+                    "목표를 완전히 달성하지 못했습니다. 가장 근접한 결과를 표시합니다.",
+                )
+            return _make_result(
+                False,
+                actions,
+                state,
+                goal,
+                "현재 조건에서 진행 가능한 비급이 없습니다.",
+            )
+
+        _score, group_index, skill_index, skill, levels, after = chosen
+
+        actions.append(_make_action(group_index, skill_index, levels))
+        used_skill_ids.add(skill.id)
+        used_books_by_rare[skill.rare] += 1
+        state = after
+
+    if best_actions:
+        return _make_result(
+            False,
+            best_actions,
+            best_state,
+            goal,
+            "반복 한도 내에서 목표를 완전히 달성하지 못했습니다. 가장 근접한 결과를 표시합니다.",
+        )
+
+    return _make_result(
+        False,
+        actions,
+        state,
+        goal,
+        "반복 한도 내에서 목표에 도달하지 못했습니다.",
+    )

@@ -930,7 +930,7 @@ class MainWindow(QMainWindow):
                 max_iterations=300,
             )
 
-            if not result.success:
+            if not result.success and not result.actions:
                 QMessageBox.information(self, "결과", result.message)
                 self.result_table.setRowCount(0)
                 self.rarity_summary_table.setRowCount(0)
@@ -939,15 +939,17 @@ class MainWindow(QMainWindow):
                 self.status_label.setText(result.message)
                 return
 
-            self.result_actions = result.actions
+            if not result.success:
+                QMessageBox.information(self, "부분 결과", result.message)
 
+            self.result_actions = result.actions
             self._populate_result_table()
             self._update_state_table(self.initial_state)
             self._rebuild_usage_summary()
-
             self.status_label.setText(
-                f"성공 | 비급 {result.used_books_total}권 | 총 단계 {result.used_levels_total} | "
-                f"초과 {result.overshoot_score} | greedy needs 반영"
+                f"{'성공' if result.success else '부분 결과'} | "
+                f"비급 {result.used_books_total}권 | 총 단계 {result.used_levels_total} | "
+                f"초과 {result.overshoot_score}"
             )
 
             order_msg = "권 단위 정렬 성공"
