@@ -30,7 +30,8 @@ from PySide6.QtWidgets import (
     QWidget,
     QMenu,
     QDialog,
-    QTextEdit, QAbstractItemView, QListWidget, QListWidgetItem, QRadioButton, QButtonGroup, QStyleOptionButton, QStyle
+    QTextEdit, QAbstractItemView, QListWidget, QListWidgetItem, QRadioButton, QButtonGroup, QStyleOptionButton, QStyle,
+    QSizePolicy, QSpacerItem
 )
 from PySide6.QtGui import QColor, QPalette
 
@@ -255,53 +256,82 @@ class MainWindow(QMainWindow):
 
     def _build_top_bar(self):
         """
-        파일 경로 입력 및 실행 버튼 바를 생성합니다.
+        플랜 관리 및 실행 버튼 바를 깔끔하게 정렬하여 생성합니다.
         """
-        layout = QGridLayout()
+        # 메인 레이아웃 (수직)
+        main_v_layout = QVBoxLayout()
+        main_v_layout.setContentsMargins(10, 5, 10, 5)
+        main_v_layout.setSpacing(5)
 
-        self.json_path_edit = QLineEdit("data/martial_skills.json")
-        self.dict_path_edit = QLineEdit("data/kr_dict.lua")
-        self.btn_settings = QPushButton("환경설정")
+        # --- 첫 번째 줄: 설정 및 상태 표시 ---
+        top_line_layout = QHBoxLayout()
+
+        self.btn_settings = QPushButton("설정")
+        self.btn_settings.setFixedWidth(80)  # 버튼 크기 고정
         self.btn_settings.clicked.connect(self._open_settings_dialog)
 
-        self.btn_solve = QPushButton("최적화 실행")
-        self.btn_solve.clicked.connect(self._solve)
-        self.btn_solve.setEnabled(False)
+        top_line_layout.addStretch(1)  # 왼쪽 공간 비우기
+        top_line_layout.addWidget(self.btn_settings)
 
-        self.status_label = QLabel("데이터를 로드하세요.")
+        top_line_layout.setContentsMargins(0, 0, 0, 0)
 
-        layout.addWidget(self.btn_solve, 1, 3)
-        layout.addWidget(self.status_label, 0, 4, 2, 1)
-
-        layout.addWidget(self.btn_settings, 0, 3)
-        layout.addWidget(self.btn_solve, 1, 4)
-        layout.addWidget(self.status_label, 0, 5, 2, 1)
-
-        layout.setColumnStretch(1, 1)
-        layout.setColumnStretch(4, 1)
-
-        self.plan_name_combo = QComboBox()
-
-        self.btn_plan_save = QPushButton("저장")
-        self.btn_plan_save.clicked.connect(self._save_plan)
-
-        self.btn_plan_load = QPushButton("불러오기")
-        self.btn_plan_load.clicked.connect(self._load_plan)
-
-        self.btn_plan_delete = QPushButton("삭제")
-        self.btn_plan_delete.clicked.connect(self._delete_plan)
-
+        # --- 두 번째 줄: 필터 및 실행 ---
+        mid_line_layout = QHBoxLayout()
         btn_filter = QPushButton("비급 포함/제외 관리")
+        btn_filter.setFixedWidth(140)
         btn_filter.clicked.connect(self._open_skill_filter_dialog)
 
-        layout.addWidget(QLabel("플랜"), 2, 0)
-        layout.addWidget(btn_filter, 1, 2)
-        layout.addWidget(self.plan_name_combo, 2, 1)
-        layout.addWidget(self.btn_plan_load, 2, 2)
-        layout.addWidget(self.btn_plan_save, 2, 3)
-        layout.addWidget(self.btn_plan_delete, 2, 4)
+        mid_line_layout.addWidget(btn_filter)
+        mid_line_layout.addStretch(1)
+        # 세 번째 줄 버튼들과 우측 끝을 맞추기 위한 더미 여백 (필요 시 조정)
+        # mid_line_layout.addSpacing(165)
 
-        return layout
+        # --- 세 번째 줄
+        bottom_line_layout = QHBoxLayout()
+        # 최적화 버튼
+        self.btn_solve = QPushButton("최적화 실행")
+        self.btn_solve.setFixedWidth(140)
+        self.btn_solve.setEnabled(False)
+        self.btn_solve.clicked.connect(self._solve)
+        # 로그 텍스트
+        self.status_label = QLabel("데이터를 로드하세요.")
+        self.status_label.setStyleSheet("color: #aaaaaa; font-weight: bold;")
+        # 로그 텍스트가 가능한 많은 공간을 차지하도록 설정
+        self.status_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        # 플랜부분
+        self.plan_name_combo = QComboBox()
+        self.plan_name_combo.setPlaceholderText("플랜을 선택하세요")
+        self.plan_name_combo.setFixedWidth(200)
+        # 플랜 버튼들
+        self.btn_plan_load = QPushButton("불러오기")
+        self.btn_plan_save = QPushButton("저장")
+        self.btn_plan_delete = QPushButton("삭제")
+        for btn in [self.btn_plan_load, self.btn_plan_save, self.btn_plan_delete]:
+            btn.setFixedWidth(80)  # 모든 플랜 버튼 크기 통일
+
+        self.btn_plan_load.clicked.connect(self._load_plan)
+        self.btn_plan_save.clicked.connect(self._save_plan)
+        self.btn_plan_delete.clicked.connect(self._delete_plan)
+        menu_spacer = QSpacerItem(200, 20, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        bottom_line_layout.addWidget(self.btn_solve)
+        bottom_line_layout.addItem(menu_spacer)
+        bottom_line_layout.addWidget(self.status_label)
+        bottom_line_layout.addWidget(self.plan_name_combo)
+        bottom_line_layout.addWidget(self.btn_plan_save)
+        bottom_line_layout.addWidget(self.btn_plan_load)
+        bottom_line_layout.addWidget(self.btn_plan_delete)
+
+        # 전체 레이아웃 합치기
+        main_v_layout.addLayout(top_line_layout)
+        main_v_layout.addLayout(mid_line_layout)
+        main_v_layout.addLayout(bottom_line_layout)
+
+        # 기존 에디터 변수 유지
+        self.json_path_edit = QLineEdit("data/martial_skills.json")
+        self.dict_path_edit = QLineEdit("data/kr_dict.lua")
+
+        return main_v_layout
 
     def _open_settings_dialog(self):
         """
