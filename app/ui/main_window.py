@@ -5,9 +5,9 @@
 from __future__ import annotations
 
 from collections import defaultdict
-from typing import Dict, List
+from typing import Dict, List, Any
 
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Qt, Signal, QRect
 from PySide6.QtWidgets import (
     QApplication,
     QCheckBox,
@@ -30,11 +30,12 @@ from PySide6.QtWidgets import (
     QWidget,
     QMenu,
     QDialog,
-    QTextEdit, QAbstractItemView, QListWidget, QListWidgetItem, QRadioButton, QButtonGroup
+    QTextEdit, QAbstractItemView, QListWidget, QListWidgetItem, QRadioButton, QButtonGroup, QStyleOptionButton, QStyle
 )
 from PySide6.QtGui import QColor, QPalette
 
 from app.loaders import load_json
+from app.models import Skill
 from app.translator import load_kr_dict, translate
 from app.normalizer import normalize_skill
 from app.grouper import group_skills
@@ -102,6 +103,57 @@ class ImeAwareLineEdit(QLineEdit):
         self.imeTextChanged.emit(combined)
 
 
+# 체크박스 헤더용
+class CheckBoxHeader(QHeaderView):
+    clicked = Signal(bool)
+
+    def __init__(self, orientation, parent=None):
+        super().__init__(orientation, parent)
+        self._is_checked = False
+
+    def paintSection(self, painter, rect, logicalIndex):
+        # 1. 기본 헤더 배경과 테두리를 먼저 그림
+        painter.save()
+        super().paintSection(painter, rect, logicalIndex)
+        painter.restore()
+
+        if logicalIndex == 0:
+            option = QStyleOptionButton()
+
+            # 2. 스타일에서 체크박스 인디케이터의 표준 크기를 가져옴
+            # SE_CheckBoxIndicator는 보통 13~16px 정도의 고정 크기를 가집니다.
+            width = self.style().pixelMetric(QStyle.PM_IndicatorWidth)
+            height = self.style().pixelMetric(QStyle.PM_IndicatorHeight)
+
+            # 3. 전체 rect 내에서 정확히 중앙 좌표 계산
+            x = rect.x() + (rect.width() - width) // 2 - 4
+            y = rect.y() + (rect.height() - height) // 2
+
+            option.rect = QRect(x, y, width, height)
+            option.state = QStyle.State_Enabled | QStyle.State_Active
+
+            if self._is_checked:
+                option.state |= QStyle.State_On
+            else:
+                option.state |= QStyle.State_Off
+
+            # 4. 계산된 중앙 위치에 체크박스 렌더링
+            self.style().drawControl(QStyle.CE_CheckBox, option, painter)
+
+    def mousePressEvent(self, event):
+        index = self.logicalIndexAt(event.pos())
+        if index == 0:
+            self._is_checked = not self._is_checked
+            self.clicked.emit(self._is_checked)
+            self.updateSection(0)
+        super().mousePressEvent(event)
+
+    def setChecked(self, state: bool):
+        if self._is_checked != state:
+            self._is_checked = state
+            self.updateSection(0)
+
+
 class MainWindow(QMainWindow):
     """
     비급 최적화 메인 윈도우입니다.
@@ -114,7 +166,7 @@ class MainWindow(QMainWindow):
         self.target_table = None
         self.current_table = None
         self.setWindowTitle("비급 최적화 도구 by HexX")
-        self.resize(1650, 980)
+        self.resize(1650, 1120)
 
         # 핵심 데이터 캐시
         self.skills = []
@@ -138,6 +190,8 @@ class MainWindow(QMainWindow):
         ]
         # 결과 캐시
         self.result_groups = []
+        # 헤더 선택 상태
+        self._select_all_target = True
 
         self.settings = load_settings()
 
@@ -174,6 +228,7 @@ class MainWindow(QMainWindow):
         # 상단 섹션
         top_section = QWidget()
         top_layout = QHBoxLayout(top_section)
+        top_section.setMaximumHeight(400)
 
         self.current_group = self._build_current_group()
         self.target_group = self._build_target_group()
@@ -236,7 +291,11 @@ class MainWindow(QMainWindow):
         self.btn_plan_delete = QPushButton("삭제")
         self.btn_plan_delete.clicked.connect(self._delete_plan)
 
+        btn_filter = QPushButton("비급 포함/제외 관리")
+        btn_filter.clicked.connect(self._open_skill_filter_dialog)
+
         layout.addWidget(QLabel("플랜"), 2, 0)
+        layout.addWidget(btn_filter, 1, 2)
         layout.addWidget(self.plan_name_combo, 2, 1)
         layout.addWidget(self.btn_plan_load, 2, 2)
         layout.addWidget(self.btn_plan_save, 2, 3)
@@ -310,17 +369,41 @@ class MainWindow(QMainWindow):
         비급 hover tooltip 내용을 생성합니다.
         """
         needs = skill.needs if skill.needs else "없음"
+        current_growth = format_growth_text(group.delta_current, potential=False)
+        potential_growth = format_growth_text(group.delta_potential, potential=True)
+        tooltip = f"""
+            <div style='font-family: "Malgun Gothic", sans-serif; padding: 5px;'>
+            <div style='text-align: center;'>
+            <hr style='border: 0; border-top: 0px solid #555; margin: 0px 0;'>
+            <b style='color: {RARITY_COLORS.get(skill.rare, "#FFFFFF")};'>[{skill.rare}] {skill.name}</b></div>
+            <hr style='border: 0; border-top: 0px solid #555; margin: 0px 0;'>
+                <table style='border-collapse: collapse;'>
+                <tr><td style='color: #AAAAAA; padding-right: 10px;'>희귀도</td><td style='color: {RARITY_COLORS.get(skill.rare, "#FFFFFF")};'>{skill.rare}</td></tr>
+                <tr><td style='color: #AAAAAA; padding-right: 10px;'>출처</td><td>{skill.force_name}</td></tr>
+                <tr><td style='color: #AAAAAA; padding-right: 10px;'>종류</td><td>{skill.type_name}</td></tr>
+                <tr><td style='color: #AAAAAA; padding-right: 10px;'>요구치</td><td>{needs}</td></tr>
+                <tr><td style='color: #AAAAAA; padding-right: 10px;'>현재 증가</td><td>{current_growth}</td></tr>
+                <tr><td style='color: #AAAAAA; padding-right: 10px;'>잠재 증가</td><td>{potential_growth}</td></tr>
+                </table>
+            </div>
+            """
 
-        return (
-            f"<b>{skill.name}</b><br>"
-            f"ID: {skill.id}<br>"
-            f"희귀도: {skill.rare}<br>"
-            f"종류: {skill.type_name}<br>"
-            f"출처: {skill.force_name}<br>"
-            f"요구치: {needs}<br>"
-            f"현재 증가: {format_growth_text(group.delta_current, potential=False)}<br>"
-            f"잠재 증가: {format_growth_text(group.delta_potential, potential=True)}"
-        )
+        return tooltip
+
+    @staticmethod
+    def _make_summary_tooltip(force, skill_type, rare, name) -> str:
+        """
+        비급 hover tooltip 내용을 생성합니다.
+        """
+        tooltip = f"""
+                <div style='font-family: Malgun Gothic;'>
+                    <b style='color: {RARITY_COLORS.get(rare, "#FFFFFF")};'>[{rare}] {name}</b><br>
+                    무력: {force}<br>
+                    종류: {skill_type}
+                </div>
+                """
+
+        return tooltip
 
     # 데이터 채우기
     def _build_current_group(self):
@@ -337,7 +420,7 @@ class MainWindow(QMainWindow):
             layout = QVBoxLayout(sub_box)
 
             table = QTableWidget(len(stats), 3)
-            table.setHorizontalHeaderLabels(["항목", "현재값", "잠재력"])
+            table.setHorizontalHeaderLabels(["항목ㅇ", "현재값", "잠재력"])
             table.verticalHeader().setVisible(False)
             table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
@@ -361,24 +444,6 @@ class MainWindow(QMainWindow):
         box = QGroupBox("목표값")
         outer = QVBoxLayout(box)
 
-        btn_layout = QHBoxLayout()
-        btn_all = QPushButton("전체 선택")
-        btn_none = QPushButton("전체 해제")
-
-        btn_all.clicked.connect(lambda: self._set_all_target_checks(True))
-        btn_none.clicked.connect(lambda: self._set_all_target_checks(False))
-
-        btn_layout.addWidget(btn_all)
-        btn_layout.addWidget(btn_none)
-        btn_layout.addStretch(1)
-
-        btn_filter = QPushButton("비급 포함/제외 관리")
-        btn_filter.clicked.connect(self._open_skill_filter_dialog)
-
-        btn_layout.addWidget(btn_filter)
-
-        outer.addLayout(btn_layout)
-
         tables_layout = QHBoxLayout()
         self.target_tables = {}
 
@@ -387,10 +452,18 @@ class MainWindow(QMainWindow):
             layout = QVBoxLayout(sub_box)
 
             table = QTableWidget(len(stats), 4)
-            table.setHorizontalHeaderLabels(["사용", "항목", "목표 현재값", "목표 잠재력"])
+            table.setHorizontalHeaderLabels(["", "항목", "목표 현재값", "목표 잠재력"])
             table.verticalHeader().setVisible(False)
-            header = table.horizontalHeader()
+            # 커스텀 헤더 적용
+            header = CheckBoxHeader(Qt.Horizontal, table)
+            table.setHorizontalHeader(header)
+            header.setChecked(True)
+            # 클로저(Closure)를 사용하여 해당 테이블만 제어하는 함수 연결
+            # 람다식에서 table=table과 같이 기본 인자를 사용하여 현재 루프의 테이블을 고정합니다.
+            header.clicked.connect(lambda checked, t=table: self._set_table_checkbox(t, checked))
+
             header.setSectionResizeMode(QHeaderView.Stretch)
+
             header.setSectionResizeMode(0, QHeaderView.Fixed)
             table.setColumnWidth(0, 42)  # 사용 체크박스
 
@@ -410,6 +483,54 @@ class MainWindow(QMainWindow):
         outer.addLayout(tables_layout)
         return box
 
+    def _set_table_checkbox(self, table: QTableWidget, checked: bool):
+        """특정 테이블 내의 모든 체크박스 상태를 변경합니다."""
+        for row in range(table.rowCount()):
+            wrapper = table.cellWidget(row, 0)
+            chk = getattr(wrapper, "checkbox", None)
+            if chk:
+                # 시그널 발생을 방지하려면 blockSignals를 쓸 수 있지만,
+                # 여기서는 단순 UI 반영이므로 직접 설정합니다.
+                chk.setChecked(checked)
+
+    def _on_header_checkbox_toggled(self, checked: bool):
+        if checked:
+            self._select_all_results()
+        else:
+            self._deselect_all_results()
+
+    def _set_all_target_checks(self, checked: bool):
+        """
+        목표값 섹션의 모든 사용 체크박스를 선택/해제합니다.
+        """
+        for table in self.target_tables.values():
+            for row in range(table.rowCount()):
+                wrapper = table.cellWidget(row, 0)
+                chk = getattr(wrapper, "checkbox", None)
+                if chk:
+                    chk.setChecked(checked)
+
+    def _select_all_results(self):
+        last_row = self.result_table.rowCount() - 1
+        if last_row >= 0:
+            wrapper = self.result_table.cellWidget(last_row, 0)
+            chk = getattr(wrapper, "checkbox", None)
+            if chk:
+                chk.setChecked(True)
+
+        # 헤더 체크박스 상태 업데이트
+        # self.header.setChecked(True)
+
+    def _deselect_all_results(self):
+        if self.result_table.rowCount() > 0:
+            wrapper = self.result_table.cellWidget(0, 0)
+            chk = getattr(wrapper, "checkbox", None)
+            if chk:
+                chk.setChecked(False)
+
+        # 헤더 체크박스 상태 업데이트
+        # self.header.setChecked(False)
+
     def _build_rarity_group(self):
         """
         희귀도별 최대 사용 권수 섹션을 생성합니다.
@@ -417,26 +538,22 @@ class MainWindow(QMainWindow):
         """
         box = QGroupBox("희귀도 제한")
         outer = QVBoxLayout(box)
-
-        btn_layout = QHBoxLayout()
-        btn_all = QPushButton("전체 선택")
-        btn_none = QPushButton("전체 해제")
-
-        btn_all.clicked.connect(lambda: self._set_all_rarity_checks(True))
-        btn_none.clicked.connect(lambda: self._set_all_rarity_checks(False))
-
-        btn_layout.addWidget(btn_all)
-        btn_layout.addWidget(btn_none)
-        btn_layout.addStretch(1)
-
-        outer.addLayout(btn_layout)
-
+        outer.setContentsMargins(10, 38, 10, 14)  # 좌, 상, 우, 하 순서 (28px은 예시값이므로 조절 필요)
+        outer.setSpacing(0)
         self.rarity_table = QTableWidget(0, 3)
-        self.rarity_table.setHorizontalHeaderLabels(["사용", "희귀도", "최대 권수"])
+        self.rarity_table.setHorizontalHeaderLabels(["", "희귀도", "최대 권수"])
         self.rarity_table.verticalHeader().setVisible(False)
-        header_rarity_table = self.rarity_table.horizontalHeader()
-        header_rarity_table.setSectionResizeMode(QHeaderView.Stretch)
-        header_rarity_table.setSectionResizeMode(0, QHeaderView.Fixed)
+        # 커스텀 헤더 적용
+        header = CheckBoxHeader(Qt.Horizontal, self.rarity_table)
+        self.rarity_table.setHorizontalHeader(header)
+        header.setChecked(True)
+        header.clicked.connect(lambda checked, t=self.rarity_table: self._set_table_checkbox(t, checked))
+
+        header.setSectionResizeMode(0, QHeaderView.Fixed)
+        self.rarity_table.setColumnWidth(0, 42)  # 사용 체크박스
+
+        header.setSectionResizeMode(QHeaderView.Stretch)
+        header.setSectionResizeMode(0, QHeaderView.Fixed)
         self.rarity_table.setColumnWidth(0, 42)
 
         outer.addWidget(self.rarity_table)
@@ -497,27 +614,60 @@ class MainWindow(QMainWindow):
         if self.initial_state is None or row < 0 or row >= len(self.result_actions):
             return
 
-        # 0행부터 현재 행까지의 상태 계산
-        state = apply_book_actions_until(
-            initial_state=self.initial_state,
-            groups=self.result_groups,
-            actions=self.result_actions,
-            count=row + 1,
-        )
+        # ✅ 가장 마지막에 체크된 행 번호 찾기
+        if not self.completed_action_rows:
+            # 체크된 게 하나도 없다면 초기 상태 표시
+            max_checked_row = -1
+            current_state = self.initial_state
+            changed_info = {}
+        else:
+            max_checked_row = max(self.completed_action_rows)
 
-        # ✅ 핵심 수정: '현재 행'에서 실제로 증가하는 값(delta)을 추출하여 강조 표시 데이터로 전달
-        action = self.result_actions[row]
-        group = self.result_groups[action.group_index]
+            # 0행부터 가장 마지막 체크된 행(max_checked_row)까지 스탯 적용
+            # (중간에 비어있는 행이 없다고 가정 - 위 로직에서 채워주므로)
+            current_state = apply_book_actions_until(
+                initial_state=self.initial_state,
+                groups=self.result_groups,
+                actions=self.result_actions,
+                count=max_checked_row + 1,
+            )
 
-        changed_info = {}
-        for stat in group.delta_current:
-            if group.delta_current[stat] > 0:
-                changed_info.setdefault(stat, {})["current"] = True
-        for stat in group.delta_potential:
-            if group.delta_potential[stat] > 0:
-                changed_info.setdefault(stat, {})["potential"] = True
+            # 강조 표시: 현재 선택(클릭)한 행이 체크되어 있다면 해당 행의 증가치를 강조
+            changed_info = {}
+            if row in self.completed_action_rows:
+                action = self.result_actions[row]
+                group = self.result_groups[action.group_index]
+                for stat, val in group.delta_current.items():
+                    if val > 0:
+                        changed_info.setdefault(stat, {})["current"] = True
+                for stat, val in group.delta_potential.items():
+                    if val > 0:
+                        changed_info.setdefault(stat, {})["potential"] = True
 
-        self._update_state_table(state, changed=changed_info)
+        # 좌측 테이블 갱신
+        self._update_state_table(current_state, changed=changed_info)
+
+        # # 0행부터 현재 행까지의 상태 계산
+        # state = apply_book_actions_until(
+        #     initial_state=self.initial_state,
+        #     groups=self.result_groups,
+        #     actions=self.result_actions,
+        #     count=row + 1,
+        # )
+        #
+        # # '현재 행'에서 실제로 증가하는 값(delta)을 추출하여 강조 표시 데이터로 전달
+        # action = self.result_actions[row]
+        # group = self.result_groups[action.group_index]
+        #
+        # changed_info = {}
+        # for stat in group.delta_current:
+        #     if group.delta_current[stat] > 0:
+        #         changed_info.setdefault(stat, {})["current"] = True
+        # for stat in group.delta_potential:
+        #     if group.delta_potential[stat] > 0:
+        #         changed_info.setdefault(stat, {})["potential"] = True
+        #
+        # self._update_state_table(state, changed=changed_info)
 
     # 그룹 상세 정보 팝업창
     def _show_group_detail_dialog(self, row: int):
@@ -615,7 +765,7 @@ class MainWindow(QMainWindow):
         for col in stretch_columns:
             header_result_table.setSectionResizeMode(col, QHeaderView.Stretch)
         self.result_table.itemSelectionChanged.connect(self._on_result_selection_changed)
-        # TODO 결과 테이블에서 행 클릭시 누적변경 되는 이벤트 연결부분 현재 체크박스로 대체하여 제외 중
+        # INFO 결과 테이블에서 행 클릭시 누적변경 되는 이벤트 연결부분 현재 체크박스로 대체하여 제외 중
         # self.result_table.cellClicked.connect(self._on_result_cell_clicked)
 
         self.result_table.setContextMenuPolicy(Qt.CustomContextMenu)
@@ -656,17 +806,6 @@ class MainWindow(QMainWindow):
         layout.addWidget(summary_splitter, 2)
 
         return box
-
-    def _set_all_target_checks(self, checked: bool):
-        """
-        목표값 섹션의 모든 사용 체크박스를 선택/해제합니다.
-        """
-        for table in self.target_tables.values():
-            for row in range(table.rowCount()):
-                wrapper = table.cellWidget(row, 0)
-                chk = getattr(wrapper, "checkbox", None)
-                if chk:
-                    chk.setChecked(checked)
 
     def _fill_default_tables(self):
         for row, stat in enumerate(STAT_ORDER):
@@ -815,20 +954,30 @@ class MainWindow(QMainWindow):
                     item_name.setForeground(self.NORMAL_STAT_FG)
 
                 # 2. 현재값(Current) 색상 결정
+                cur_font = item_cur.font()
                 if stat_changed.get("current"):
                     item_cur.setForeground(self.CHANGED_STAT_FG)  # 변경 시 파란색 (최우선)
+                    cur_font.setBold(True)
                 elif not is_target_enabled:
                     item_cur.setForeground(self.DISABLED_STAT_FG)  # 미선택 시 회색
+                    cur_font.setBold(False)
                 else:
                     item_cur.setForeground(self.NORMAL_STAT_FG)  # 기본 검정
+                    cur_font.setBold(False)
+                item_cur.setFont(cur_font)
 
                 # 3. 잠재값(Potential) 색상 결정
+                pot_font = item_pot.font()
                 if stat_changed.get("potential"):
                     item_pot.setForeground(self.CHANGED_STAT_FG)  # 변경 시 파란색 (최우선)
+                    pot_font.setBold(True)
                 elif not is_target_enabled:
                     item_pot.setForeground(self.DISABLED_STAT_FG)  # 미선택 시 회색
+                    pot_font.setBold(False)
                 else:
                     item_pot.setForeground(self.NORMAL_STAT_FG)  # 기본 검정
+                    pot_font.setBold(False)
+                item_pot.setFont(pot_font)
 
                 table.setItem(row, 0, item_name)
                 table.setItem(row, 1, item_cur)
@@ -919,7 +1068,8 @@ class MainWindow(QMainWindow):
 
                 new_g = self._clone_group_with_skills(g, new_skills)
                 filtered_groups.append(new_g)
-            self.result_groups = filtered_groups
+            # self.result_groups = filtered_groups
+            self.result_groups = self._build_filtered_groups()
 
             result = optimize_greedy_actions(
                 initial_state=self.initial_state,
@@ -1302,6 +1452,9 @@ class MainWindow(QMainWindow):
         self.result_table.setRowCount(len(self.result_actions))
 
         for row, action in enumerate(self.result_actions):
+            if action.group_index >= len(self.result_groups):
+                print(f"⚠️ 경고: 잘못된 그룹 인덱스 접근 ({action.group_index})")
+                continue
             group = self.result_groups[action.group_index]
             selected_idx = getattr(action, "selected_skill_index", action.default_skill_index)
             selected_idx = max(0, min(selected_idx, len(group.skills) - 1))
@@ -1359,22 +1512,42 @@ class MainWindow(QMainWindow):
         chk = getattr(wrapper, "checkbox", None)
         checked = bool(chk.isChecked()) if chk else False
 
+        # 블로킹(Signal Blocking)을 통해 무한 루프 방지
+        self.result_table.blockSignals(True)
+
         if checked:
-            self.completed_action_rows.add(row)
+            # 현재 행 포함, 이전의 모든 행을 체크 상태로 만듦
+            for r in range(0, row + 1):
+                self._set_row_checkbox_state(r, True)
+                self.completed_action_rows.add(r)
         else:
-            self.completed_action_rows.discard(row)
+            # 현재 행 포함, 이후의 모든 행을 체크 해제 상태로 만듦
+            for r in range(row, len(self.result_actions)):
+                self._set_row_checkbox_state(r, False)
+                self.completed_action_rows.discard(r)
 
-        # 완료 체크 시 현재 index 저장
-        idx = self._get_selected_skill_index_for_row(row)
-        if idx >= 0:
-            self._last_combo_indices[row] = idx
+        self.result_table.blockSignals(False)
 
+        # 콤보박스 활성/비활성 처리 및 상태 반영
+        if row > 0 and not checked:  # 체크 해제 시, 누적상태 전달하기 위해, 1개라도 체크되고 현재체크가 안되었을때 바로전 행을 전달
+            self._apply_result_row_state(row - 1)
+        else:
+            self._apply_result_row_state(row)
+        self._rebuild_usage_summary()
+
+    def _set_row_checkbox_state(self, row: int, state: bool):
+        """행의 체크박스 상태를 물리적으로 변경하는 헬퍼 함수"""
+        wrapper = self.result_table.cellWidget(row, 0)
+        chk = getattr(wrapper, "checkbox", None)
+        if chk:
+            chk.blockSignals(True)  # 개별 시그널 차단하여 재귀 호출 방지
+            chk.setChecked(state)
+            chk.blockSignals(False)
+
+        # 콤보박스 활성화 여부도 제어
         combo = self.result_table.cellWidget(row, 3)
         if isinstance(combo, QComboBox):
-            combo.setEnabled(not checked)
-
-        self._apply_result_row_state(row)
-        self._rebuild_usage_summary()
+            combo.setEnabled(not state)
 
     def _on_result_skill_combo_changed(self, row: int):
         """
@@ -1518,7 +1691,7 @@ class MainWindow(QMainWindow):
         self.books_summary_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
         for row, ((rare, name, skill_type, force), info) in enumerate(book_items):
-            done_text = "완료" if info["rows"] > 0 and info["completed"] == info["rows"] else ""
+            done_text = "완료" if 0 < info["rows"] == info["completed"] else ""
 
             # 사용된 비급 목록
             self.add_item(self.books_summary_table, row, 0, done_text, editable=False)
@@ -1526,8 +1699,13 @@ class MainWindow(QMainWindow):
             self.add_item(self.books_summary_table, row, 2, name, RARITY_COLORS.get(rare, "#FFFFFF"))
             self.add_item(self.books_summary_table, row, 3, skill_type)
             self.add_item(self.books_summary_table, row, 4, force)
-            # self.add_item(self.books_summary_table, row, 5, info["books"])
             self.add_item(self.books_summary_table, row, 5, info["levels"])
+
+            # 툴팁추가
+            target_item = self.books_summary_table.item(row, 2)
+
+            if target_item:
+                target_item.setToolTip(self._make_summary_tooltip(force, skill_type, rare, name))
 
     def _get_excluded_keys(self):
         keys = set()
@@ -1582,8 +1760,8 @@ class MainWindow(QMainWindow):
 
         name, ok = QInputDialog.getText(
             self,
-            "플랜 저장",
-            "저장할 플랜 이름:",
+            "계획 저장",
+            "저장할 계획 이름:",
             text=default_name,
         )
 
@@ -1592,19 +1770,19 @@ class MainWindow(QMainWindow):
 
         name = name.strip()
         if not name:
-            QMessageBox.warning(self, "저장 실패", "플랜 이름을 입력하세요.")
+            QMessageBox.warning(self, "저장 실패", "계획 이름을 입력하세요.")
             return
 
         data = {
-            "version": 1,
+            "version": 2,
+            "engine": "greedy_abc_needs",
             "current_values": self._collect_current_ui_values(),
             "goal_values": self._collect_goal_ui_values(),
             "rarity_limits": self._collect_rarity_ui_values(),
-            "result_rows": self._collect_result_rows(),
-            "completed_action_rows": sorted(list(self.completed_action_rows)),
-            "filter_mode": self.filter_mode,
             "skill_filter_rules": self.skill_filter_rules,
             "excluded_skill_ids": sorted(list(self.excluded_skill_ids)),
+            "completed_action_rows": sorted(list(self.completed_action_rows)),
+            "result_rows": self._collect_result_rows(),
         }
 
         save_plan(name, data)
@@ -1614,7 +1792,7 @@ class MainWindow(QMainWindow):
         if idx >= 0:
             self.plan_name_combo.setCurrentIndex(idx)
 
-        QMessageBox.information(self, "저장 완료", f"플랜 저장 완료: {name}")
+        QMessageBox.information(self, "저장 완료", f"계획 저장 완료: {name}")
 
     def _load_plan(self):
         from app.plan_store import load_plan
@@ -1629,25 +1807,25 @@ class MainWindow(QMainWindow):
 
         data = load_plan(name)
 
-        # UI 복원
         self._restore_current_ui_values(data.get("current_values", {}))
         self._restore_goal_ui_values(data.get("goal_values", {}))
         self._restore_rarity_ui_values(data.get("rarity_limits", {}))
 
-        # 필터 로드
-        self.filter_mode = data.get("filter_mode", "exclude")
         self.skill_filter_rules = data.get(
             "skill_filter_rules",
-            [{"action": "include", "kind": "all", "label": "전체"}]
+            [{"action": "include", "kind": "all", "label": "전체"}],
         )
         self.excluded_skill_ids = set(data.get("excluded_skill_ids", []))
 
         self.initial_state = self._build_initial_state_from_ui()
-        self._update_state_table(self.initial_state)
 
+        # 중요: 플랜의 필터 규칙/제외목록을 복원한 뒤 result_groups 재생성
+        self.result_groups = self._build_filtered_groups()
+
+        self._update_state_table(self.initial_state)
         self._restore_result_rows(data.get("result_rows", []))
 
-        QMessageBox.information(self, "불러오기 완료", f"플랜 불러오기 완료: {name}")
+        QMessageBox.information(self, "불러오기 완료", f"계획 불러오기 완료: {name}")
 
     def _delete_plan(self):
         from app.plan_store import delete_plan
@@ -1655,11 +1833,46 @@ class MainWindow(QMainWindow):
         name = self.plan_name_combo.currentText()
         if not name:
             return
+        # 삭제 확인 팝업
+        reply = QMessageBox.question(
+            self, "계획 삭제 확인",
+            f"'{name}' 계획을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.",
+            QMessageBox.Yes | QMessageBox.No, QMessageBox.No
+        )
 
-        delete_plan(name)
-        self._refresh_plan_list()
+        if reply == QMessageBox.Yes:
+            from app.plan_store import delete_plan
+            delete_plan(name)
+            self._refresh_plan_list()
+            self.status_label.setText(f"계획이 삭제되었습니다: {name}")
 
     # 플랜 저장용 헬퍼 함수들
+    def _build_filtered_groups(self):  # Filter group 생성 헬퍼
+        filtered_groups = []
+
+        for g in self.groups:
+            new_skills = [s for s in g.skills if self._is_skill_allowed_by_filter_rules(s)]
+            if not new_skills:
+                continue
+
+            filtered_groups.append(self._clone_group_with_skills(g, new_skills))
+
+        return filtered_groups
+
+    def _find_result_group_index_for_saved_row(self, saved_row: dict) -> int:  # 그룹 찾기 헬퍼
+        group_key = saved_row.get("group_key")
+
+        if group_key:
+            for idx, g in enumerate(self.result_groups):
+                if g.key == group_key:
+                    return idx
+
+        old_index = int(saved_row.get("group_index", -1))
+        if 0 <= old_index < len(self.result_groups):
+            return old_index
+
+        return -1
+
     def _collect_current_ui_values(self) -> dict:
         data = {}
 
@@ -1710,15 +1923,23 @@ class MainWindow(QMainWindow):
         rows = []
 
         for row, action in enumerate(self.result_actions):
+            group = self.result_groups[action.group_index]
+            skill_index = getattr(action, "selected_skill_index", action.default_skill_index)
+            skill = group.skills[skill_index]
+
             rows.append({
                 "row": row,
                 "group_index": action.group_index,
+                "group_key": group.key,
                 "book_no_in_group": action.book_no_in_group,
                 "levels_used": action.levels_used,
-                "selected_skill_name": self._get_selected_skill_name_for_row(row),
-                "rare": self._get_rarity_for_row(row),
-                "type_name": self._get_type_for_row(row),
-                "force_name": self._get_force_for_row(row),
+                "default_skill_index": action.default_skill_index,
+                "selected_skill_index": skill_index,
+                "selected_skill_id": skill.id,
+                "selected_skill_name": skill.name,
+                "rare": skill.rare,
+                "type_name": skill.type_name,
+                "force_name": skill.force_name,
                 "completed": row in self.completed_action_rows,
             })
 
@@ -1766,38 +1987,62 @@ class MainWindow(QMainWindow):
 
         self.result_actions = []
         self.completed_action_rows = set()
+        self._last_combo_indices = {}
 
-        for item in rows:
-            self.result_actions.append(
-                BookAction(
-                    group_index=int(item["group_index"]),
-                    book_no_in_group=int(item.get("book_no_in_group", 1)),
-                    levels_used=int(item["levels_used"]),
-                    default_skill_index=0,
-                )
+        for saved in rows:
+            group_index = self._find_result_group_index_for_saved_row(saved)
+            if group_index < 0:
+                continue
+
+            group = self.result_groups[group_index]
+
+            selected_skill_id = saved.get("selected_skill_id")
+            selected_skill_name = saved.get("selected_skill_name", "")
+
+            selected_idx = -1
+
+            if selected_skill_id is not None:
+                for idx, sk in enumerate(group.skills):
+                    if sk.id == selected_skill_id:
+                        selected_idx = idx
+                        break
+
+            if selected_idx < 0 and selected_skill_name:
+                for idx, sk in enumerate(group.skills):
+                    if sk.name == selected_skill_name:
+                        selected_idx = idx
+                        break
+
+            if selected_idx < 0:
+                selected_idx = int(saved.get("selected_skill_index", 0))
+
+            if selected_idx < 0 or selected_idx >= len(group.skills):
+                selected_idx = 0
+
+            action = BookAction(
+                group_index=group_index,
+                book_no_in_group=int(saved.get("book_no_in_group", 1)),
+                levels_used=int(saved.get("levels_used", 1)),
+                default_skill_index=int(saved.get("default_skill_index", selected_idx)),
+                selected_skill_index=selected_idx,
             )
 
-            if item.get("completed", False):
+            self.result_actions.append(action)
+
+            if saved.get("completed", False):
                 self.completed_action_rows.add(len(self.result_actions) - 1)
 
         self._populate_result_table()
 
-        # 저장된 비급명으로 드롭다운 복원
-        for row, item in enumerate(rows):
+        for row, action in enumerate(self.result_actions):
             combo = self.result_table.cellWidget(row, 3)
             if isinstance(combo, QComboBox):
-                name = item.get("selected_skill_name", "")
-                idx = combo.findText(name)
-                if idx >= 0:
-                    combo.setCurrentIndex(idx)
+                combo.setCurrentIndex(action.selected_skill_index)
+                self._last_combo_indices[row] = action.selected_skill_index
 
-                if row in self.completed_action_rows:  # 완료된 행 드랍다운 잠금
+                if row in self.completed_action_rows:
                     combo.setEnabled(False)
 
-        for row in range(len(self.result_actions)):
-            combo = self.result_table.cellWidget(row, 3)
-            if isinstance(combo, QComboBox):
-                self._last_combo_indices[row] = combo.currentIndex()
         self._rebuild_usage_summary()
 
     # 드랍다운: 선택된 그룹 내 skill index helper
@@ -1878,9 +2123,12 @@ class MainWindow(QMainWindow):
             color=RARITY_COLORS.get(skill.rare, "#FFFFFF"),
             editable=False,
         )
-        # FIXME 4,5 이외의 행들도 변경?
+        # ──────── 4,5 이외의 행들은 일반적으로 전부 같으나, 비목적 스탯을 올리기 위한 비급은 같은 그룹으로 묶일 수 있음 그경우,
+        #  그룹의 현재증가 잠재증가가 달라질 수 있어서 9,10에 변경해야함
         self.add_item(self.result_table, row, 4, skill.type_name, editable=False)
         self.add_item(self.result_table, row, 5, skill.force_name, editable=False)
+        self.add_item(self.result_table, row, 9, skill.delta_current, editable=False)
+        self.add_item(self.result_table, row, 10, skill.delta_potential, editable=False)
 
     # 드랍다운: 중복선택 자동 변경 함수
     def _resolve_group_skill_conflicts(self, changed_row: int) -> bool:
