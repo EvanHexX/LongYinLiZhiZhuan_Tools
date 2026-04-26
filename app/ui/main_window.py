@@ -43,7 +43,6 @@ from app.optimizer import (
     StatBlock,
     GoalConfig,
     RarityConstraint,
-    optimize_groups,
 )
 from app.snapshot import (
     apply_book_actions_until,
@@ -114,7 +113,7 @@ class MainWindow(QMainWindow):
         self.state_table = None
         self.target_table = None
         self.current_table = None
-        self.setWindowTitle("비급 최적화 도구")
+        self.setWindowTitle("비급 최적화 도구 by HexX")
         self.resize(1650, 980)
 
         # 핵심 데이터 캐시
@@ -143,7 +142,6 @@ class MainWindow(QMainWindow):
         self.settings = load_settings()
 
         self._build_ui()
-        # self._fill_default_tables()
 
         # 기본 경로 자동 입력
         self.json_path_edit.setText(self.settings.get("json_path", "data/martial_skills.json"))
@@ -306,7 +304,8 @@ class MainWindow(QMainWindow):
         dlg.exec()
 
     # 툴팁 UI
-    def _make_skill_tooltip(self, skill, group) -> str:
+    @staticmethod
+    def _make_skill_tooltip(skill, group) -> str:
         """
         비급 hover tooltip 내용을 생성합니다.
         """
@@ -1034,19 +1033,6 @@ class MainWindow(QMainWindow):
         layout = QVBoxLayout(dlg)
 
         mode_layout = QHBoxLayout()
-
-        # rb_include = QRadioButton("추가 규칙")
-        # rb_exclude = QRadioButton("제외 규칙")
-        # rb_include.setChecked(True)
-
-        # mode_group = QButtonGroup(dlg)
-        # mode_group.addButton(rb_exclude)
-        # mode_group.addButton(rb_include)
-        #
-        # mode_layout.addWidget(QLabel("모드"))
-        # mode_layout.addWidget(rb_exclude)
-        # mode_layout.addWidget(rb_include)
-        # mode_layout.addStretch(1)
 
         layout.addLayout(mode_layout)
 

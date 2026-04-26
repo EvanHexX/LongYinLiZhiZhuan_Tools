@@ -18,6 +18,14 @@ ATTR_MAP = {
     "射术": "사술",
 }
 
+ATTRIBUTE_STATS = ["근력", "민첩", "지력", "의지", "체질", "경맥"]
+MARTIAL_STATS = ["내공", "경공", "절기", "권", "검", "도", "장병", "기문", "사술"]
+STAT_SECTIONS = [
+    ("속성", ATTRIBUTE_STATS),
+    ("무학", MARTIAL_STATS),
+]
+
+# 등급 표시 순서
 RARITY_ORDER = ["기초", "진급", "상승", "비전", "정극", "절세"]
 # 등급별 색상 정의
 RARITY_COLORS = {
@@ -28,21 +36,52 @@ RARITY_COLORS = {
     "정극": "#FF9A1F",  # 금색 (정극)
     "절세": "#FF1E36",  # 주홍/빨간색 (절세)
 }
-# 등급별 기본 최대권수
+
+RARITY_RANK = {
+    "기초": 1,
+    "진급": 2,
+    "상승": 3,
+    "비전": 4,
+    "정극": 5,
+    "절세": 6,
+}
+
+# 등급별 열람 가능 제한 최소 스텟
+RARITY_MIN_ACTIVE_STAT = {
+    "기초": 0,
+    "진급": 10,
+    "상승": 20,
+    "비전": 40,
+    "정극": 50,
+    "절세": 65,
+}
+
+# 등급별 최대 경험치 획득 제한
+RARITY_MAX_EXPERIENCE_QUANTITY = {
+    "기초": 12,
+    "진급": 10,
+    "상승": 8,
+    "비전": 6,
+    "정극": 4,
+    "절세": 2,
+}
+
+# 등급별 기본 최대권수 기본숫자
 RARITY_DEFAULT_COUNTS = {
     "기초": "50",  # 기초
     "진급": "30",  # 심화
     "상승": "24",  # 상승
     "비전": "12",  # 비전
-    "정극": "6",  # 정극
-    "절세": "2"  # 절세
+    "정극": "8",  # 정극
+    "절세": "4"  # 절세
 }
 
-ATTRIBUTE_STATS = ["근력", "민첩", "지력", "의지", "체질", "경맥"]
+# C
+C_GAP_THRESHOLD = 30
 
-MARTIAL_STATS = ["내공", "경공", "절기", "권", "검", "도", "장병", "기문", "사술"]
+LEVEL_CANDIDATES = [1, 2, 3, 5, 10]
 
-STAT_SECTIONS = [
-    ("속성", ATTRIBUTE_STATS),
-    ("무학", MARTIAL_STATS),
-]
+LOW_CURRENT_RARITIES = {"기초", "진급", "진계", "상승"}
+LOW_POTENTIAL_RARITIES_1 = {"진급", "진계"}
+LOW_POTENTIAL_RARITIES_2 = {"상승"}
+MAIN_POTENTIAL_RARITIES = {"상승", "비전", "정극", "최상급", "절세"}

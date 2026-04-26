@@ -16,49 +16,9 @@ from app.optimizer import (
     apply_group_levels,
 )
 from app.snapshot import BookAction, check_needs
-
-
-C_GAP_THRESHOLD = 30
-
-LEVEL_CANDIDATES = [1, 2, 3, 5, 10]
-
-LOW_CURRENT_RARITIES = {"기초", "진급", "진계", "상승"}
-LOW_POTENTIAL_RARITIES_1 = {"진급", "진계"}
-LOW_POTENTIAL_RARITIES_2 = {"상승"}
-MAIN_POTENTIAL_RARITIES = {"상승", "비전", "정극", "최상급", "절세"}
-
-RARITY_RANK = {
-    "기초": 1,
-    "진급": 2,
-    "진계": 2,
-    "상승": 3,
-    "비전": 4,
-    "정극": 5,
-    "최상급": 5,
-    "절세": 6,
-}
-
-RARITY_MIN_ACTIVE_STAT = {
-    "기초": 0,
-    "진급": 10,
-    "진계": 10,
-    "상승": 20,
-    "비전": 40,
-    "정극": 50,
-    "최상급": 50,
-    "절세": 65,
-}
-
-RARITY_MAX_EXPERIENCE_QUANTITY = {
-    "기초": 12,
-    "진급": 10,
-    "진계": 10,
-    "상승": 8,
-    "비전": 6,
-    "정극": 4,
-    "최상급": 4,
-    "절세": 2,
-}
+from app.constants import C_GAP_THRESHOLD, LEVEL_CANDIDATES, LOW_CURRENT_RARITIES, LOW_POTENTIAL_RARITIES_1, \
+    LOW_POTENTIAL_RARITIES_2, MAIN_POTENTIAL_RARITIES, RARITY_RANK, RARITY_MIN_ACTIVE_STAT, \
+    RARITY_MAX_EXPERIENCE_QUANTITY
 
 
 @dataclass
@@ -259,12 +219,12 @@ def _make_result(success: bool, actions: List[BookAction], state: StatBlock, goa
 
 
 def _iter_usable_skills(
-    state: StatBlock,
-    goal: GoalConfig,
-    rarity_constraint: RarityConstraint,
-    groups,
-    used_skill_ids: set[int],
-    used_books_by_rare: Dict[str, int],
+        state: StatBlock,
+        goal: GoalConfig,
+        rarity_constraint: RarityConstraint,
+        groups,
+        used_skill_ids: set[int],
+        used_books_by_rare: Dict[str, int],
 ):
     for group_index, group in enumerate(groups):
         for skill_index, skill in enumerate(group.skills):
@@ -284,12 +244,12 @@ def _iter_usable_skills(
 
 
 def _select_reduce_c_gap(
-    state: StatBlock,
-    goal: GoalConfig,
-    rarity_constraint: RarityConstraint,
-    groups,
-    used_skill_ids: set[int],
-    used_books_by_rare: Dict[str, int],
+        state: StatBlock,
+        goal: GoalConfig,
+        rarity_constraint: RarityConstraint,
+        groups,
+        used_skill_ids: set[int],
+        used_books_by_rare: Dict[str, int],
 ):
     abc = _abc(state, goal)
     c_targets = [(stat, v["C"]) for stat, v in abc.items() if v["C"] > C_GAP_THRESHOLD]
@@ -303,7 +263,7 @@ def _select_reduce_c_gap(
     candidates = []
 
     for group_index, group, skill_index, skill in _iter_usable_skills(
-        state, goal, rarity_constraint, groups, used_skill_ids, used_books_by_rare
+            state, goal, rarity_constraint, groups, used_skill_ids, used_books_by_rare
     ):
         if skill.rare not in LOW_CURRENT_RARITIES:
             continue
@@ -338,18 +298,18 @@ def _select_reduce_c_gap(
 
 
 def _select_low_rarity_potential(
-    state: StatBlock,
-    goal: GoalConfig,
-    rarity_constraint: RarityConstraint,
-    groups,
-    used_skill_ids: set[int],
-    used_books_by_rare: Dict[str, int],
-    allowed_rarities: set[str],
+        state: StatBlock,
+        goal: GoalConfig,
+        rarity_constraint: RarityConstraint,
+        groups,
+        used_skill_ids: set[int],
+        used_books_by_rare: Dict[str, int],
+        allowed_rarities: set[str],
 ):
     candidates = []
 
     for group_index, group, skill_index, skill in _iter_usable_skills(
-        state, goal, rarity_constraint, groups, used_skill_ids, used_books_by_rare
+            state, goal, rarity_constraint, groups, used_skill_ids, used_books_by_rare
     ):
         if skill.rare not in allowed_rarities:
             continue
@@ -392,12 +352,12 @@ def _select_low_rarity_potential(
 
 
 def _select_main_potential(
-    state: StatBlock,
-    goal: GoalConfig,
-    rarity_constraint: RarityConstraint,
-    groups,
-    used_skill_ids: set[int],
-    used_books_by_rare: Dict[str, int],
+        state: StatBlock,
+        goal: GoalConfig,
+        rarity_constraint: RarityConstraint,
+        groups,
+        used_skill_ids: set[int],
+        used_books_by_rare: Dict[str, int],
 ):
     abc = _abc(state, goal)
     b_targets = [(stat, v["B"]) for stat, v in abc.items() if v["B"] > 0]
@@ -415,7 +375,7 @@ def _select_main_potential(
     candidates = []
 
     for group_index, group, skill_index, skill in _iter_usable_skills(
-        state, goal, rarity_constraint, groups, used_skill_ids, used_books_by_rare
+            state, goal, rarity_constraint, groups, used_skill_ids, used_books_by_rare
     ):
         if skill.rare not in MAIN_POTENTIAL_RARITIES:
             continue
@@ -486,12 +446,12 @@ def _select_main_potential(
 
 
 def _select_current_progress(
-    state: StatBlock,
-    goal: GoalConfig,
-    rarity_constraint: RarityConstraint,
-    groups,
-    used_skill_ids: set[int],
-    used_books_by_rare: Dict[str, int],
+        state: StatBlock,
+        goal: GoalConfig,
+        rarity_constraint: RarityConstraint,
+        groups,
+        used_skill_ids: set[int],
+        used_books_by_rare: Dict[str, int],
 ):
     abc = _abc(state, goal)
     a_targets = [(stat, v["A"]) for stat, v in abc.items() if v["A"] > 0]
@@ -506,7 +466,7 @@ def _select_current_progress(
     candidates = []
 
     for group_index, group, skill_index, skill in _iter_usable_skills(
-        state, goal, rarity_constraint, groups, used_skill_ids, used_books_by_rare
+            state, goal, rarity_constraint, groups, used_skill_ids, used_books_by_rare
     ):
         if group.delta_current.get(a1, 0) <= 0:
             continue
@@ -551,11 +511,11 @@ def _select_current_progress(
 
 
 def optimize_greedy_actions(
-    initial_state: StatBlock,
-    goal: GoalConfig,
-    rarity_constraint: RarityConstraint,
-    groups,
-    max_iterations: int = 300,
+        initial_state: StatBlock,
+        goal: GoalConfig,
+        rarity_constraint: RarityConstraint,
+        groups,
+        max_iterations: int = 300,
 ) -> GreedyOptimizationResult:
     state = clone_state(initial_state)
     actions: List[BookAction] = []
@@ -608,6 +568,12 @@ def optimize_greedy_actions(
                 state, goal, rarity_constraint, groups, used_skill_ids, used_books_by_rare
             )
 
+        # 6. 원래 목표 비급이 needs 때문에 막힌 경우, needs 해금용 현재값 보강.
+        if chosen is None:
+            chosen = _select_need_unlock_progress(
+                state, goal, rarity_constraint, groups, used_skill_ids, used_books_by_rare
+            )
+
         if chosen is None:
             if best_actions:
                 return _make_result(
@@ -648,3 +614,152 @@ def optimize_greedy_actions(
         goal,
         "반복 한도 내에서 목표에 도달하지 못했습니다.",
     )
+
+
+def _find_blocked_goal_skills_by_needs(
+        state: StatBlock,
+        goal: GoalConfig,
+        rarity_constraint: RarityConstraint,
+        groups,
+        used_skill_ids: set[int],
+        used_books_by_rare: Dict[str, int],
+):
+    blocked = []
+
+    for group_index, group in enumerate(groups):
+        # 원래 목표에 기여하는 그룹만 확인
+        goal_related = False
+        for stat in _enabled_stats(goal):
+            if group.delta_current.get(stat, 0) > 0 or group.delta_potential.get(stat, 0) > 0:
+                goal_related = True
+                break
+
+        if not goal_related:
+            continue
+
+        for skill_index, skill in enumerate(group.skills):
+            if skill.id in used_skill_ids:
+                continue
+
+            if not _rarity_hard_allowed(skill, rarity_constraint, used_books_by_rare):
+                continue
+
+            if not _rarity_allowed_by_min_stat(state, goal, skill.rare):
+                continue
+
+            if check_needs(state, skill):
+                continue
+
+            missing = {}
+            for stat, req in skill.need_current.items():
+                gap = req - state.current.get(stat, 0)
+                if gap > 0:
+                    missing[stat] = gap
+
+            if missing:
+                blocked.append((group_index, group, skill_index, skill, missing))
+
+    return blocked
+
+
+def _build_need_unlock_stats(blocked_skills) -> dict[str, int]:
+    """
+    막힌 목표 비급들의 부족 요구치를 합산합니다.
+    값이 클수록 해금 우선도가 높습니다.
+    """
+    unlock_stats = defaultdict(int)
+
+    for _gi, _group, _si, _skill, missing in blocked_skills:
+        for stat, gap in missing.items():
+            unlock_stats[stat] += gap
+
+    return dict(unlock_stats)
+
+
+def _select_need_unlock_progress(
+        state: StatBlock,
+        goal: GoalConfig,
+        rarity_constraint: RarityConstraint,
+        groups,
+        used_skill_ids: set[int],
+        used_books_by_rare: Dict[str, int],
+):
+    """
+    원래 목표 비급이 needs 때문에 막혔을 때,
+    그 needs를 채우는 현재값 증가 비급을 선택합니다.
+    """
+    blocked = _find_blocked_goal_skills_by_needs(
+        state=state,
+        goal=goal,
+        rarity_constraint=rarity_constraint,
+        groups=groups,
+        used_skill_ids=used_skill_ids,
+        used_books_by_rare=used_books_by_rare,
+    )
+
+    if not blocked:
+        return None
+
+    unlock_stats = _build_need_unlock_stats(blocked)
+    if not unlock_stats:
+        return None
+
+    candidates = []
+
+    for group_index, group, skill_index, skill in _iter_usable_skills(
+            state, goal, rarity_constraint, groups, used_skill_ids, used_books_by_rare
+    ):
+        unlock_gain = 0
+
+        for stat, weight in unlock_stats.items():
+            dc = group.delta_current.get(stat, 0)
+            if dc <= 0:
+                continue
+
+            current_gap = max(0, weight)
+            unlock_gain += min(dc, current_gap) * weight
+
+        if unlock_gain <= 0:
+            continue
+
+        for levels in _level_candidates(state, group, goal):
+            after = _apply_candidate(state, group, levels)
+            if after is None:
+                continue
+
+            real_unlock_gain = 0
+            for stat, _weight in unlock_stats.items():
+                before_gap_total = 0
+                after_gap_total = 0
+
+                for _gi, _g, _si, _sk, missing in blocked:
+                    if stat not in missing:
+                        continue
+
+                    req = _sk.need_current.get(stat, 0)
+                    before_gap_total += max(0, req - state.current.get(stat, 0))
+                    after_gap_total += max(0, req - after.current.get(stat, 0))
+
+                real_unlock_gain += max(0, before_gap_total - after_gap_total)
+
+            if real_unlock_gain <= 0:
+                continue
+
+            p = _progress(state, after, goal)
+            rare_rank = RARITY_RANK.get(skill.rare, 99)
+            penalty = _experience_penalty(skill.rare, used_books_by_rare)
+
+            score = (
+                real_unlock_gain * 15000,
+                p["A_reduced"] * 3000,
+                p["B_reduced"] * 2000,
+                p["C_reduced"] * 1000,
+                -rare_rank * 700,
+                -penalty,
+                -p["waste"] * 500,
+                -levels,
+            )
+
+            candidates.append((score, group_index, skill_index, skill, levels, after))
+
+    return max(candidates, key=lambda x: x[0]) if candidates else None
