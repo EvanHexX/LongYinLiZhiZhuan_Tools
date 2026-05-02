@@ -31,14 +31,12 @@ from PySide6.QtWidgets import (
     QMenu,
     QDialog,
     QTextEdit, QAbstractItemView, QListWidget, QListWidgetItem, QRadioButton, QButtonGroup, QStyleOptionButton, QStyle,
-    QSizePolicy, QSpacerItem
+    QSizePolicy, QSpacerItem, QGraphicsOpacityEffect
 )
-from PySide6.QtGui import QColor, QPalette
+from PySide6.QtGui import QColor, QPalette, QIcon, QPixmap
 
-from app.loaders import load_json
+from app.loaders import load_skills_from_db
 from app.models import Skill
-from app.translator import load_kr_dict, translate
-from app.normalizer import normalize_skill
 from app.grouper import group_skills
 from app.optimizer import (
     STAT_ORDER,
@@ -53,6 +51,7 @@ from app.greedy_optimizer import optimize_greedy_actions
 from app.settings_store import load_settings, save_settings
 from app.constants import RARITY_ORDER, RARITY_COLORS, RARITY_DEFAULT_COUNTS, ATTRIBUTE_STATS, MARTIAL_STATS, \
     STAT_SECTIONS
+from app.utils import resource_path
 
 
 def format_growth_text(delta: Dict[str, int], potential: bool = False) -> str:
@@ -155,6 +154,37 @@ class CheckBoxHeader(QHeaderView):
             self.updateSection(0)
 
 
+# 이미지 버튼
+class ImageButton(QLabel):
+    # 클릭했을 때 발생할 신호 정의
+    clicked = Signal()
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setCursor(Qt.PointingHandCursor)  # 마우스 올리면 손가락 모양으로
+
+        # 투명도 효과 설정 (오버 효과용)
+        self.opacity_effect = QGraphicsOpacityEffect(self)
+        self.opacity_effect.setOpacity(1.0)  # 기본은 불투명
+        self.setGraphicsEffect(self.opacity_effect)
+
+    # 마우스가 들어왔을 때 (Hover In)
+    def enterEvent(self, event):
+        self.opacity_effect.setOpacity(0.8)  # 살짝 투명하게 해서 "불 들어온" 느낌
+        super().enterEvent(event)
+
+    # 마우스가 나갔을 때 (Hover Out)
+    def leaveEvent(self, event):
+        self.opacity_effect.setOpacity(1.0)  # 다시 원래대로
+        super().leaveEvent(event)
+
+    # 마우스 버튼을 눌렀다 뗐을 때 (Click)
+    def mouseReleaseEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            self.clicked.emit()  # 클릭 신호 발사!
+        super().mouseReleaseEvent(event)
+
+
 class MainWindow(QMainWindow):
     """
     비급 최적화 메인 윈도우입니다.
@@ -166,15 +196,17 @@ class MainWindow(QMainWindow):
         self.state_table = None
         self.target_table = None
         self.current_table = None
+        self.setWindowIcon(QIcon(resource_path("assets/icon.ico")))
         self.setWindowTitle("비급 최적화 도구 by HexX")
         self.resize(1650, 1120)
+        self.banner = resource_path("assets/banner.png")
+        self.logo = resource_path("assets/lylzz_logo.png")
 
         # 핵심 데이터 캐시
         self.skills = []
         self.groups = []
         self.initial_state: StatBlock | None = None
         self.result_actions = []
-        self.kr_dict = {}
         self.excluded_skill_ids = set()
         self.plan_name_combo = None
         self.current_tables = {}
@@ -199,8 +231,7 @@ class MainWindow(QMainWindow):
         self._build_ui()
 
         # 기본 경로 자동 입력
-        self.json_path_edit.setText(self.settings.get("json_path", "data/martial_skills.json"))
-        self.dict_path_edit.setText(self.settings.get("dict_path", "data/kr_dict.lua"))
+        self.db_path_edit.setText(self.settings.get("db_path", "data/skills_kr.db"))
 
         self.DISABLED_STAT_FG = QColor("#8A8A8A")  # 목표 제외 스탯
         self.CHANGED_STAT_FG = QColor("#6BB6FF")  # 선택 행에서 상승한 값
@@ -221,7 +252,8 @@ class MainWindow(QMainWindow):
 
         # 상단 파일/실행 바
         top_bar = self._build_top_bar()
-        root.addLayout(top_bar)
+        # root.addLayout(top_bar)
+        root.addWidget(top_bar)
 
         splitter = QSplitter(Qt.Vertical)
         root.addWidget(splitter, 1)
@@ -258,134 +290,185 @@ class MainWindow(QMainWindow):
         """
         플랜 관리 및 실행 버튼 바를 깔끔하게 정렬하여 생성합니다.
         """
-        # 메인 레이아웃 (수직)
-        main_v_layout = QVBoxLayout()
-        main_v_layout.setContentsMargins(10, 5, 10, 5)
-        main_v_layout.setSpacing(5)
+        self.topbar_height = 180
+        # 1. 배경 이미지를 가질 컨테이너 위젯 생성
+        top_bar_container = QWidget()  # Topbar 최상단 컨테이너
+        """ top_bar의 최상단 컨테이너"""
+        top_bar_container.setMinimumHeight(self.topbar_height)
+        top_bar_container.setObjectName("TopBarContainer")  # 스타일 시트용 ID
 
-        # --- 첫 번째 줄: 설정 및 상태 표시 ---
-        top_line_layout = QHBoxLayout()
-
-        self.btn_settings = QPushButton("설정")
-        self.btn_settings.setFixedWidth(80)  # 버튼 크기 고정
-        self.btn_settings.clicked.connect(self._open_settings_dialog)
-
-        top_line_layout.addStretch(1)  # 왼쪽 공간 비우기
-        top_line_layout.addWidget(self.btn_settings)
-
-        top_line_layout.setContentsMargins(0, 0, 0, 0)
-
-        # --- 두 번째 줄: 필터 및 실행 ---
-        mid_line_layout = QHBoxLayout()
+        # 메인 레이아웃 (수평정렬)
+        main_h_layout = QHBoxLayout(top_bar_container)
+        """ 메인 레이아웃 (수평정렬: topbar를 가로로 나눔) """
+        main_h_layout.setContentsMargins(10, 0, 10, 0)  # 좌, 상, 우, 하
+        main_h_layout.setSpacing(5)
+        # 로고영역
+        logo_area_layout = QVBoxLayout()
+        logo_spacer = QSpacerItem(200, 20, QSizePolicy.Minimum, QSizePolicy.Maximum)
+        logo_area_layout.addItem(logo_spacer)
+        # 메뉴영역
+        main_menu_v_layout = QVBoxLayout()
+        """ topbar의 메뉴영역의 레이아웃 """
         btn_filter = QPushButton("비급 포함/제외 관리")
+        """ 비급 필터 버튼 """
         btn_filter.setFixedWidth(140)
         btn_filter.clicked.connect(self._open_skill_filter_dialog)
-
-        mid_line_layout.addWidget(btn_filter)
-        mid_line_layout.addStretch(1)
-        # 세 번째 줄 버튼들과 우측 끝을 맞추기 위한 더미 여백 (필요 시 조정)
-        # mid_line_layout.addSpacing(165)
-
-        # --- 세 번째 줄
-        bottom_line_layout = QHBoxLayout()
-        # 최적화 버튼
+        btn_talents = QPushButton("목표천부설정")
+        """ 목표 천부 설정 버튼 """
+        btn_talents.setFixedWidth(140)
         self.btn_solve = QPushButton("최적화 실행")
+        """ 최적화 버튼 """
         self.btn_solve.setFixedWidth(140)
         self.btn_solve.setEnabled(False)
         self.btn_solve.clicked.connect(self._solve)
+        btn_close = QPushButton("종료")
+        btn_close.clicked.connect(self.close)  # 현재 창을 닫음
+        """ 종료 버튼 """
+        main_menu_v_layout.addWidget(btn_filter)
+        main_menu_v_layout.addWidget(btn_talents)
+        main_menu_v_layout.addWidget(self.btn_solve)
+        main_menu_v_layout.addWidget(btn_close)
+        # 로그영역
+        log_v_layout = QVBoxLayout()
+        contents_margin_top = 16
+        contents_margin_bottom = 14
+        log_v_layout.setContentsMargins(10, contents_margin_top, 0, contents_margin_bottom)
+        log_v_layout.setSpacing(5)
         # 로그 텍스트
-        self.status_label = QLabel("데이터를 로드하세요.")
+        self.log_label = QLabel("비급 최적화 도구 1.3.14")                # 로그 표시용
+        self.status_label = QLabel("데이터를 로드하세요.")       # 상태라벨
         self.status_label.setStyleSheet("color: #aaaaaa; font-weight: bold;")
-        # 로그 텍스트가 가능한 많은 공간을 차지하도록 설정
+        # 스테이터스 텍스트가 가능한 많은 가로 공간을 차지하도록 설정
         self.status_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        log_v_layout.addWidget(self.log_label)
+        log_v_layout.addStretch(1)                          # 로그와 상태라벨 사이벌리기
+        log_v_layout.addWidget(self.status_label)
+        # 가장 우측 레이아웃
+        right_v_layout = QVBoxLayout()
+        """ 가장 우측의 레이아웃을 세로로 분할하는 레이아웃 """
+        right_v_layout.setContentsMargins(18, contents_margin_top, 0, contents_margin_bottom)
+        self.btn_settings = QPushButton("설정")          # 설정버튼
+        self.btn_settings.setFixedWidth(80)             # 버튼 크기 고정
+        self.btn_settings.clicked.connect(self._open_settings_dialog)
+        right_v_layout.addWidget(self.btn_settings, alignment=Qt.AlignRight)  # 설정버튼 우측정렬
+        right_v_layout.addStretch(1)  # 설정과 플랜저장/불러오기 버튼 사이의 공간
         # 플랜부분
+        right_h_layout = QHBoxLayout()
+        """ 가장 오른쪽 수평분할 레이아웃 안의 수직분할레이아웃 하단의 수평분할레이아웃, 플랜저장/불러오기삽입용 """
         self.plan_name_combo = QComboBox()
-        self.plan_name_combo.setPlaceholderText("플랜을 선택하세요")
-        self.plan_name_combo.setFixedWidth(200)
+        self.plan_name_combo.setPlaceholderText("새 플랜을 만들거나 불러오세요")
+        self.plan_name_combo.setFixedWidth(240)
         # 플랜 버튼들
-        self.btn_plan_load = QPushButton("불러오기")
         self.btn_plan_save = QPushButton("저장")
+        self.btn_plan_load = QPushButton("불러오기")
         self.btn_plan_delete = QPushButton("삭제")
         for btn in [self.btn_plan_load, self.btn_plan_save, self.btn_plan_delete]:
             btn.setFixedWidth(80)  # 모든 플랜 버튼 크기 통일
-
-        self.btn_plan_load.clicked.connect(self._load_plan)
         self.btn_plan_save.clicked.connect(self._save_plan)
+        self.btn_plan_load.clicked.connect(self._load_plan)
         self.btn_plan_delete.clicked.connect(self._delete_plan)
-        menu_spacer = QSpacerItem(200, 20, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        # right_h_layout에 플랜 버튼들 추가
+        right_h_layout.addWidget(self.plan_name_combo)
+        right_h_layout.addWidget(self.btn_plan_save)
+        right_h_layout.addWidget(self.btn_plan_load)
+        right_h_layout.addWidget(self.btn_plan_delete)
+        right_v_layout.addLayout(right_h_layout)  # 가장 우측 레이아웃 최하단에 플랜버튼 들어있는 수평레이아웃 추가
 
-        bottom_line_layout.addWidget(self.btn_solve)
-        bottom_line_layout.addItem(menu_spacer)
-        bottom_line_layout.addWidget(self.status_label)
-        bottom_line_layout.addWidget(self.plan_name_combo)
-        bottom_line_layout.addWidget(self.btn_plan_save)
-        bottom_line_layout.addWidget(self.btn_plan_load)
-        bottom_line_layout.addWidget(self.btn_plan_delete)
+        # 메인 레이아웃에 수평 정렬로 추가.
+        main_h_layout.addLayout(logo_area_layout)       # 로고영역만큼 비우기
+        main_h_layout.addLayout(main_menu_v_layout)     # 메인메뉴 추가
+        main_h_layout.addItem(QSpacerItem(20, 20, QSizePolicy.Fixed, QSizePolicy.Fixed))
+        main_h_layout.addLayout(log_v_layout)           # 로그레이아웃 추가
+        main_h_layout.addLayout(right_v_layout)         # 우측 메뉴영역 추가
 
-        # 전체 레이아웃 합치기
-        main_v_layout.addLayout(top_line_layout)
-        main_v_layout.addLayout(mid_line_layout)
-        main_v_layout.addLayout(bottom_line_layout)
+        # 로고
+        self.logo_label = ImageButton(top_bar_container)
+        logo_pixmap = QPixmap(self.logo)  # 로고 이미지 경로
+        scaled_pixmap = logo_pixmap.scaledToHeight(self.topbar_height, Qt.SmoothTransformation)
+        self.logo_label.setPixmap(scaled_pixmap)
+        self.logo_label.setFixedSize(scaled_pixmap.size())
+        # 3. 로고 위치 조정 (레이아웃 밖에서 독립적으로 움직임)
+        self.logo_label.move(10, 0)  # 위치에 고정 (밀어내지 않음)
+        self.logo_label.setToolTip(self._make_simple_tooltip("   최적화 실행   "))  # 툴팁
+        self.logo_label.clicked.connect(self._solve)
+        # 파일 환경 변수
+        self.db_path_edit = QLineEdit("data/skills_kr.db")
 
-        # 기존 에디터 변수 유지
-        self.json_path_edit = QLineEdit("data/martial_skills.json")
-        self.dict_path_edit = QLineEdit("data/kr_dict.lua")
-
-        return main_v_layout
+        return top_bar_container
 
     def _open_settings_dialog(self):
         """
-        JSON / KR_DICT 경로를 설정하는 환경설정 다이얼로그입니다.
+        DB 경로 / 커스텀 ID 범위를 설정하는 환경설정 다이얼로그입니다.
         """
+        from PySide6.QtWidgets import QSpinBox as _QSpinBox
+        from app.ui.db_manager_dialog import SkillDbManagerDialog
+
         dlg = QDialog(self)
         dlg.setWindowTitle("환경설정")
-        dlg.resize(720, 180)
+        dlg.resize(760, 160)
 
         layout = QGridLayout(dlg)
 
-        json_edit = QLineEdit(self.json_path_edit.text())
-        dict_edit = QLineEdit(self.dict_path_edit.text())
+        # ── DB 경로
+        db_edit = QLineEdit(self.db_path_edit.text())
+        btn_db = QPushButton("선택")
 
-        btn_json = QPushButton("선택")
-        btn_dict = QPushButton("선택")
-
-        def pick_json():
-            path, _ = QFileDialog.getOpenFileName(dlg, "비급 JSON 선택", "", "JSON Files (*.json)")
+        def pick_db():
+            path, _ = QFileDialog.getOpenFileName(dlg, "비급 DB 선택", "", "SQLite DB (*.db);;All Files (*.*)")
             if path:
-                json_edit.setText(path)
+                db_edit.setText(path)
 
-        def pick_dict():
-            path, _ = QFileDialog.getOpenFileName(dlg, "KR_DICT Lua 선택", "", "Lua Files (*.lua);;All Files (*.*)")
-            if path:
-                dict_edit.setText(path)
+        btn_db.clicked.connect(pick_db)
 
-        btn_json.clicked.connect(pick_json)
-        btn_dict.clicked.connect(pick_dict)
+        layout.addWidget(QLabel("비급 DB"), 0, 0)
+        layout.addWidget(db_edit, 0, 1)
+        layout.addWidget(btn_db, 0, 2)
 
+        # ── 커스텀 ID 시작값
+        custom_id_spin = _QSpinBox()
+        custom_id_spin.setRange(0, 9_999_999)
+        custom_id_spin.setValue(self.settings.get("custom_id_min", 1000))
+        custom_id_spin.setToolTip(
+            "이 값 이상의 ID를 가진 비급은 '커스텀 데이터'로 간주되어 DB 관리 창에서 삭제할 수 있습니다."
+        )
+
+        layout.addWidget(QLabel("커스텀 ID 시작값"), 1, 0)
+        layout.addWidget(custom_id_spin, 1, 1)
+
+        # ── DB 관리 버튼
+        btn_manage = QPushButton("비급 DB 관리...")
+        btn_manage.setToolTip("비급 데이터를 추가 / 수정 / 삭제합니다.")
+
+        def open_manager():
+            db_path = db_edit.text().strip() or self.db_path_edit.text().strip()
+            custom_min = custom_id_spin.value()
+            mgr = SkillDbManagerDialog(db_path, custom_id_min=custom_min, parent=dlg)
+            mgr.exec()
+            if mgr.data_changed:
+                self.db_path_edit.setText(db_path)
+                self.settings["db_path"] = db_path
+                self.settings["custom_id_min"] = custom_min
+                save_settings(self.settings)
+                dlg.accept()
+                self._load_data(silent=False)
+
+        btn_manage.clicked.connect(open_manager)
+        layout.addWidget(btn_manage, 1, 2)
+
+        # ── 저장 / 취소
         btn_save = QPushButton("저장 후 다시 로드")
         btn_cancel = QPushButton("취소")
 
         def save_and_reload():
-            self.json_path_edit.setText(json_edit.text().strip())
-            self.dict_path_edit.setText(dict_edit.text().strip())
-
-            self.settings["json_path"] = self.json_path_edit.text().strip()
-            self.settings["dict_path"] = self.dict_path_edit.text().strip()
+            self.db_path_edit.setText(db_edit.text().strip())
+            self.settings["db_path"] = self.db_path_edit.text().strip()
+            self.settings["custom_id_min"] = custom_id_spin.value()
             save_settings(self.settings)
-
             dlg.accept()
             self._load_data(silent=False)
 
         btn_save.clicked.connect(save_and_reload)
         btn_cancel.clicked.connect(dlg.reject)
-
-        layout.addWidget(QLabel("비급 JSON"), 0, 0)
-        layout.addWidget(json_edit, 0, 1)
-        layout.addWidget(btn_json, 0, 2)
-
-        layout.addWidget(QLabel("KR_DICT Lua"), 1, 0)
-        layout.addWidget(dict_edit, 1, 1)
-        layout.addWidget(btn_dict, 1, 2)
 
         layout.addWidget(btn_save, 2, 1)
         layout.addWidget(btn_cancel, 2, 2)
@@ -421,6 +504,21 @@ class MainWindow(QMainWindow):
         return tooltip
 
     @staticmethod
+    def _make_simple_tooltip(text, color="#FFFFFF") -> str:
+        """
+        비급 hover tooltip 내용을 생성합니다.
+        """
+        tooltip = f"""
+                <div style='font-family: "Malgun Gothic", sans-serif; padding: 5px;'>
+                <div style='text-align: center;'>
+                <hr style='border: 0; border-top: 0px solid #555; margin: 0px 0;'>
+                <b style='color: {color};'>{text}</b></div>
+                <hr style='border: 0; border-top: 0px solid #555; margin: 0px 0;'>
+                </div>
+                """
+        return tooltip
+
+    @staticmethod
     def _make_summary_tooltip(force, skill_type, rare, name) -> str:
         """
         비급 hover tooltip 내용을 생성합니다.
@@ -450,7 +548,7 @@ class MainWindow(QMainWindow):
             layout = QVBoxLayout(sub_box)
 
             table = QTableWidget(len(stats), 3)
-            table.setHorizontalHeaderLabels(["항목ㅇ", "현재값", "잠재력"])
+            table.setHorizontalHeaderLabels(["항목", "현재값", "잠재력"])
             table.verticalHeader().setVisible(False)
             table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
@@ -857,15 +955,10 @@ class MainWindow(QMainWindow):
             self.state_table.setItem(row, 2, QTableWidgetItem("60"))
 
     # 환경설정 내부 기능
-    def _browse_json(self):
-        path, _ = QFileDialog.getOpenFileName(self, "비급 JSON 선택", "", "JSON Files (*.json)")
+    def _browse_db(self):
+        path, _ = QFileDialog.getOpenFileName(self, "비급 DB 선택", "", "SQLite DB (*.db);;All Files (*.*)")
         if path:
-            self.json_path_edit.setText(path)
-
-    def _browse_dict(self):
-        path, _ = QFileDialog.getOpenFileName(self, "KR_DICT Lua 선택", "", "Lua Files (*.lua);;All Files (*.*)")
-        if path:
-            self.dict_path_edit.setText(path)
+            self.db_path_edit.setText(path)
 
     @staticmethod
     def _safe_int_from_item(table: QTableWidget, row: int, col: int, default: int = 0) -> int:
@@ -1029,21 +1122,9 @@ class MainWindow(QMainWindow):
 
     def _load_data(self, silent: bool = False):
         try:
-            json_path = self.json_path_edit.text().strip()
-            dict_path = self.dict_path_edit.text().strip()
+            db_path = self.db_path_edit.text().strip()
 
-            data = load_json(json_path)
-            self.kr_dict = load_kr_dict(dict_path)
-
-            self.skills = []
-            for raw in data["skills"]:
-                skill = normalize_skill(raw)
-                skill.name = translate(skill.name, self.kr_dict)
-                skill.rare = translate(skill.rare, self.kr_dict)
-                skill.type_name = translate(skill.type_name, self.kr_dict)
-                skill.force_name = translate(skill.force_name, self.kr_dict)
-                skill.needs = translate(skill.needs, self.kr_dict)
-                self.skills.append(skill)
+            self.skills = load_skills_from_db(db_path)
 
             self.groups = group_skills(self.skills)
             self._populate_rarity_table()
@@ -1053,12 +1134,10 @@ class MainWindow(QMainWindow):
 
             self.btn_solve.setEnabled(True)
             self.status_label.setText(f"로드 완료 | 비급 {len(self.skills)}개 | 그룹 {len(self.groups)}개")
-            self.settings["json_path"] = json_path
-            self.settings["dict_path"] = dict_path
+            self.settings["db_path"] = db_path
             save_settings(self.settings)
             self._refresh_plan_list()
 
-            # TODO need parsing 확인용
             need_count = sum(1 for s in self.skills if s.need_current)
             print("needs 파싱된 비급 수:", need_count)
 
@@ -1083,6 +1162,18 @@ class MainWindow(QMainWindow):
             self.initial_state = self._build_initial_state_from_ui()
             goal = self._build_goal_from_ui()
             rarity_constraint = self._build_rarity_constraint_from_ui()
+            # 기존 완료 체크를 제외 목록에 반영
+            self._sync_excluded_from_completed_actions()
+            # 새 최적화 실행 전 이전 결과 UI/상태 초기화
+            self.completed_action_rows.clear()
+            self._last_combo_indices.clear()
+            self.result_actions = []
+            self.result_groups = []
+            self.result_table.setRowCount(0)
+            self.rarity_summary_table.setRowCount(0)
+            self.books_summary_table.setRowCount(0)
+            self._update_state_table(self.initial_state)
+
 
             self.status_label.setText("최적화 실행 중...")
             QApplication.processEvents()

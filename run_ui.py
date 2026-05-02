@@ -2,6 +2,7 @@
 # 이 파일은 PySide6 UI 실행 엔트리포인트입니다.
 
 import sys
+import os
 from PySide6.QtWidgets import QApplication
 from app.ui.main_window import MainWindow
 

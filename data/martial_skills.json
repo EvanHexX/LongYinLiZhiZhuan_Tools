@@ -305,34 +305,38 @@
             "atk_range": "0-0",
             "base_dmg": 0.0,
             "def_posture": [],
-            "desc": "卖艺之人最常见的把式，也蕴含着最基础的硬功法门",
+            "desc": "아미파가 획득한 용윤귀장공(龍胤歸藏功)의 일부로，\\n내용이 적어 아미의 심법을 대거 융합시킨 것이다.\\n수련자의 행동 민첩성을 향상시킬 수 있다.",
             "dmg_bonus_text": "",
-            "dmg_range": "0-0",
-            "effects_text": "护盾",
-            "equip_text": "生命上限+8, 体质+4, 经脉+4",
-            "force_name": "江湖",
-            "id": 8,
+            "dmg_range": "",
+            "effects_text": "真气喷",
+            "equip_text": "生命上限+50, 内力上限+60, 内功+4, 灵巧+4, 经脉+4, 意志+2, 通脉+0",
+            "force_name": "峨眉派",
+            "id": 801,
             "mana_cost": 0.0,
             "max_use": 0,
-            "name": "胸口碎大石",
-            "needs": "绝技10",
-            "rare_lv": 0,
-            "rare_name": "基础",
+            "name": "峨眉归藏功",
+            "needs": "",
+            "rare_lv": 1,
+            "rare_name": "进阶",
             "stats": {
                 "damage": [],
                 "equip": {
-                    "体质": 4,
-                    "生命上限": 8,
-                    "经脉": 4
+                    "内力上限": 60,
+                    "内功": 4,
+                    "意志": 2,
+                    "灵巧": 4,
+                    "生命上限": 50,
+                    "经脉": 4,
+                    "通脉": 0
                 },
                 "upgrade": {
-                    "意志": 1
+                    "灵巧潜力": 1
                 },
                 "use": []
             },
-            "type_name": "绝技",
-            "upgrade_text": "意志+1",
-            "upgrade_total": 1,
+            "type_name": "내공",
+            "upgrade_text": "灵巧潜力+1",
+            "upgrade_total": 1.0,
             "use_text": "",
             "weapon": ""
         },
@@ -32043,31 +32047,38 @@
             "atk_range": "0-0",
             "base_dmg": 0.0,
             "def_posture": [],
-            "desc": "소림귀장공 설명",
+            "desc": "소림이 획득한 용윤귀장공(龍胤歸藏功)의 일부로，\\n불법에 융합된 후 수련자의 신형과 기력에 대한 증익이 한층 더 심하여，\\n소림이 서로 다른 것을 함께 받아들이는 신수(神髓)를 잘 보여준다",
             "dmg_bonus_text": "",
-            "dmg_range": "0-0",
-            "effects_text": "",
-            "equip_text": "생명상한+90, 내공상한+140, 근력+12, 체질+12, 기혈회복+0.5%, 쾌유+5%",
-            "force_name": "소림사",
+            "dmg_range": "",
+            "effects_text": "真气喷",
+            "equip_text": "生命上限+90, 内力上限+140, 体质+12, 力道+12, 回血+0, 康复+0",
+            "force_name": "少林寺",
             "id": 672,
-            "mana_cost": 0,
+            "mana_cost": 0.0,
             "max_use": 0,
-            "name": "소림귀장공",
-            "needs": "근력20/체질30/내공40",
-            "rare_lv": 5,
-            "rare_name": "비전",
+            "name": "少林归藏功",
+            "needs": "",
+            "rare_lv": 3,
+            "rare_name": "秘传",
             "stats": {
-                "damage": {},
-                "equip": [],
-                "upgrade": {
-                    "力道潜力": 1,
-                    "体质潜力": 1
+                "damage": [],
+                "equip": {
+                    "体质": 12,
+                    "内力上限": 140,
+                    "力道": 12,
+                    "回血": 0,
+                    "康复": 0,
+                    "生命上限": 90
                 },
-                "use": {}
+                "upgrade": {
+                    "体质潜力": 1,
+                    "力道潜力": 1
+                },
+                "use": []
             },
-            "type_name": "절기",
-            "upgrade_text": "근력잠재력+1, 체질잠재력+1",
-            "upgrade_total": 2,
+            "type_name": "내공",
+            "upgrade_text": "力道潜力+1, 体质潜力+1",
+            "upgrade_total": 2.0,
             "use_text": "",
             "weapon": ""
         },
@@ -33762,31 +33773,38 @@
             "atk_range": "0-0",
             "base_dmg": 0.0,
             "def_posture": [],
-            "desc": "무당귀장공 설명",
+            "desc": "무당이 얻어낸 용윤귀장공의 일부로，\\n총강(總綱)만을 얻었다고는 하나 도법에 융합시킨 후에는 수련자의 경맥 자질을 크게 향상시킬 수 있다.",
             "dmg_bonus_text": "",
-            "dmg_range": "0-0",
-            "effects_text": "",
-            "equip_text": "생명상한+50, 내공상한+140, 지력+9, 경맥+9, 불굴+4%, 통맥+4%",
-            "force_name": "무당파",
+            "dmg_range": "",
+            "effects_text": "真气喷",
+            "equip_text": "生命上限+50, 内力上限+140, 智力+9, 经脉+9, 不屈+0, 通脉+0",
+            "force_name": "武当派",
             "id": 708,
-            "mana_cost": 0,
+            "mana_cost": 0.0,
             "max_use": 0,
-            "name": "무당귀장공",
-            "needs": "지력25/경맥15/내공25",
-            "rare_lv": 5,
-            "rare_name": "상승",
+            "name": "武当归藏功",
+            "needs": "",
+            "rare_lv": 2,
+            "rare_name": "上乘",
             "stats": {
-                "damage": {},
-                "equip": [],
+                "damage": [],
+                "equip": {
+                    "不屈": 0,
+                    "内力上限": 140,
+                    "智力": 9,
+                    "生命上限": 50,
+                    "经脉": 9,
+                    "通脉": 0
+                },
                 "upgrade": {
                     "内功潜力": 1,
                     "经脉潜力": 1
                 },
-                "use": {}
+                "use": []
             },
-            "type_name": "절기",
-            "upgrade_text": "내공잠재력+1, 경맥잠재력+1",
-            "upgrade_total": 2,
+            "type_name": "내공",
+            "upgrade_text": "内功潜力+1, 经脉潜力+1",
+            "upgrade_total": 2.0,
             "use_text": "",
             "weapon": ""
         },
@@ -46899,32 +46917,41 @@
             "atk_range": "0-0",
             "base_dmg": 0.0,
             "def_posture": [],
-            "desc": "역천주천대법 설명",
+            "desc": "무절의(武絶義)가 비룡문(飛龍門)의 제왕봉선공(帝王封禪功)과 공동파(崆峒派)의 두전성이(斗轉星移)를 융합하여 창시한 독문절기다。초식의 방식과 내식의 운행이 완전히 상식에 역행하여 기괴하고 측량할 수 없다。수련자가 조금이라도 부주의하면 주화입마(走火入魔)에 빠지고 만다",
             "dmg_bonus_text": "",
-            "dmg_range": "0-0",
-            "effects_text": "",
-            "equip_text": "절기+8, 근력+8, 의지+8, 체질+15, 호갑+6, 반탄+8%, 부정효과저항+5%, 광마+5%",
-            "force_name": "강호",
+            "dmg_range": "",
+            "effects_text": "护盾",
+            "equip_text": "绝技+9, 力道+9, 意志+9, 体质+15, 护甲+6, 反弹+0, 负面抗性+0, 疯魔+0",
+            "force_name": "江湖",
             "id": 992,
             "mana_cost": 0.0,
             "max_use": 0,
-            "name": "역천주천대법",
-            "needs": "力道50/意志60/体质80",
+            "name": "逆转周天大法",
+            "needs": "",
             "rare_lv": 5,
             "rare_name": "绝世",
             "stats": {
-                "damage": {},
-                "equip": [],
-                "upgrade": {
-                    "体力潜力": 1,
-                    "医术潜力": 1,
-                    "体质潜力": 2
+                "damage": [],
+                "equip": {
+                    "体质": 15,
+                    "力道": 9,
+                    "反弹": 0,
+                    "意志": 9,
+                    "护甲": 6,
+                    "疯魔": 0,
+                    "绝技": 9,
+                    "负面抗性": 0
                 },
-                "use": {}
+                "upgrade": {
+                    "体质潜力": 2,
+                    "力道潜力": 1,
+                    "意志潜力": 1
+                },
+                "use": []
             },
             "type_name": "절기",
-            "upgrade_text": "体力潜力+1, 医术潜力+1, 体质潜力+2",
-            "upgrade_total": 4,
+            "upgrade_text": "力道潜力+1, 意志潜力+1, 体质潜力+2",
+            "upgrade_total": 4.0,
             "use_text": "",
             "weapon": ""
         },
@@ -46933,105 +46960,2955 @@
             "atk_range": "0-0",
             "base_dmg": 0.0,
             "def_posture": [],
-            "desc": "절의귀장공 설명",
+            "desc": "무절의가 쟁취한 용윤귀장공(龍胤歸藏功)의 일부로，\\n비룡문 심법을 융합한 후 수련자의 힘과 체백(體魄)을 크게 향상시킬 수 있는 패도(霸道)하고 강맹한 공법이 되었다",
             "dmg_bonus_text": "",
-            "dmg_range": "0-0",
-            "effects_text": "",
-            "equip_text": "생명상한+130, 내공상한+140, 내공+8, 근력+8, 의지+8, 체질+12, 외상+5%, 횡련+5%, 페체+5%",
-            "force_name": "강호",
+            "dmg_range": "",
+            "effects_text": "真气喷",
+            "equip_text": "生命上限+130, 内力上限+140, 内功+8, 力道+8, 意志+8, 体质+12, 外伤+0, 横练+0, 霸体+0",
+            "force_name": "江湖",
             "id": 993,
-            "mana_cost": 0,
+            "mana_cost": 0.0,
             "max_use": 0,
-            "name": "절의귀장공",
-            "needs": "민첩10/의지5/내공15",
-            "rare_lv": 5,
-            "rare_name": "절세",
+            "name": "绝义归藏功",
+            "needs": "",
+            "rare_lv": 4,
+            "rare_name": "顶极",
             "stats": {
-                "damage": {},
-                "equip": [],
-                "upgrade": {
-                    "力道潜力": 1,
-                    "意志潜力": 1,
-                    "体质潜力": 1
+                "damage": [],
+                "equip": {
+                    "体质": 12,
+                    "内力上限": 140,
+                    "内功": 8,
+                    "力道": 8,
+                    "外伤": 0,
+                    "意志": 8,
+                    "横练": 0,
+                    "生命上限": 130,
+                    "霸体": 0
                 },
-                "use": {}
-            },
-            "type_name": "절기",
-            "upgrade_text": "근력잠재력+1, 의지잠재력+1, 체질잠재력+1",
-            "upgrade_total": 3,
-            "use_text": "",
-            "weapon": ""
-        },
-        {
-            "atk_posture": [],
-            "atk_range": "0-0",
-            "base_dmg": 0.0,
-            "def_posture": [],
-            "desc": "심광귀장공 설명",
-            "dmg_bonus_text": "",
-            "dmg_range": "0-0",
-            "effects_text": "",
-            "equip_text": "생명상한+100, 내공상한+280, 내공+9, 지력+9, 의지+9, 경맥+9, 독술+9, 독소+6%, 혼란+6%, 부정효과강화+6%",
-            "force_name": "강호",
-            "id": 994,
-            "mana_cost": 0,
-            "max_use": 0,
-            "name": "심광귀장공",
-            "needs": "지력80/경맥70/내공75",
-            "rare_lv": 5,
-            "rare_name": "절세",
-            "stats": {
-                "damage": {},
-                "equip": [],
                 "upgrade": {
-                    "智力潜力": 2,
-                    "意志潜力": 1,
-                    "经脉潜力": 1
-                },
-                "use": {}
-            },
-            "type_name": "절기",
-            "upgrade_text": "灵巧潜力+1",
-            "upgrade_total": 4,
-            "use_text": "",
-            "weapon": ""
-        },
-        {
-            "atk_posture": [],
-            "atk_range": "0-0",
-            "base_dmg": 0.0,
-            "def_posture": [],
-            "desc": "용윤귀장공 설명",
-            "dmg_bonus_text": "",
-            "dmg_range": "0-0",
-            "effects_text": "",
-            "equip_text": "생명상한+150, 내공상한+300, 내공+10, 근력+10, 민첩+10, 지력+10, 의지+10, 체질+10, 경맥+10",
-            "force_name": "강호",
-            "id": 995,
-            "mana_cost": 0,
-            "max_use": 0,
-            "name": "용윤귀장공",
-            "needs": "지력70/경맥80/내공90",
-            "rare_lv": 5,
-            "rare_name": "절세",
-            "stats": {
-                "damage": {},
-                "equip": [],
-                "upgrade": {
-                    "力道潜力": 1,
-                    "灵巧潜力": 1,
-                    "智力潜力": 1,
-                    "意志潜力": 1,
                     "体质潜力": 1,
-                    "经脉潜力": 1
+                    "力道潜力": 1,
+                    "意志潜力": 1
                 },
-                "use": {}
+                "use": []
             },
             "type_name": "내공",
-            "upgrade_text": "근력잠재력+10, 민첩잠재력+10, 지력잠재력+10, 의지잠재력+10, 체질잠재력+10, 경맥잠재력+10",
-            "upgrade_total": 6,
+            "upgrade_text": "力道潜力+1, 意志潜力+1, 体质潜力+1",
+            "upgrade_total": 3.0,
             "use_text": "",
             "weapon": ""
+        },
+        {
+            "atk_posture": [],
+            "atk_range": "0-0",
+            "base_dmg": 0.0,
+            "def_posture": [],
+            "desc": "계심광(計心狂)이 쟁취한 용윤귀장공(龍胤歸藏功)의 일부로，\\n가장 완전하지만 가장 심오하다。계심광이 심혈을 기울여 참오(參悟)하고 오독심법(五毒心法)을 융합한 끝에，\\n음험하고 독랄(毒辣)하며 기괴하고 측량할 수 없는 공포의 공법이 되었다",
+            "dmg_bonus_text": "",
+            "dmg_range": "",
+            "effects_text": "真气喷",
+            "equip_text": "生命上限+100, 内力上限+280, 内功+9, 智力+9, 意志+9, 经脉+9, 毒术+9, 毒素+0, 混乱+0, 负面加成+0",
+            "force_name": "江湖",
+            "id": 994,
+            "mana_cost": 0.0,
+            "max_use": 0,
+            "name": "心狂归藏功",
+            "needs": "",
+            "rare_lv": 5,
+            "rare_name": "绝世",
+            "stats": {
+                "damage": [],
+                "equip": {
+                    "内力上限": 280,
+                    "内功": 9,
+                    "意志": 9,
+                    "智力": 9,
+                    "毒术": 9,
+                    "毒素": 0,
+                    "混乱": 0,
+                    "生命上限": 100,
+                    "经脉": 9,
+                    "负面加成": 0
+                },
+                "upgrade": {
+                    "意志潜力": 1,
+                    "智力潜力": 2,
+                    "经脉潜力": 1
+                },
+                "use": []
+            },
+            "type_name": "내공",
+            "upgrade_text": "智力潜力+2, 意志潜力+1, 经脉潜力+1",
+            "upgrade_total": 4.0,
+            "use_text": "",
+            "weapon": ""
+        },
+        {
+            "atk_posture": [],
+            "atk_range": "0-0",
+            "base_dmg": 0.0,
+            "def_posture": [],
+            "desc": "조윤종(趙胤宗)이 창시한 것으로，\\n현묘함이 비할 데 없고 위력이 무궁하다。수련자의 체백(體魄)과 경맥을 천인(天人) 경지까지 끌어올려 경천위지(經天緯地)의 능력을 얻게 하니，\\n당세 제일 내공이라 일컬어진다。",
+            "dmg_bonus_text": "",
+            "dmg_range": "",
+            "effects_text": "真气喷",
+            "equip_text": "生命上限+150, 内力上限+300, 内功+10, 力道+10, 灵巧+10, 智力+10, 意志+10, 体质+10, 经脉+10",
+            "force_name": "江湖",
+            "id": 995,
+            "mana_cost": 0.0,
+            "max_use": 0,
+            "name": "龙胤归藏功",
+            "needs": "",
+            "rare_lv": 5,
+            "rare_name": "绝世",
+            "stats": {
+                "damage": [],
+                "equip": {
+                    "体质": 10,
+                    "内力上限": 300,
+                    "内功": 10,
+                    "力道": 10,
+                    "意志": 10,
+                    "智力": 10,
+                    "灵巧": 10,
+                    "生命上限": 150,
+                    "经脉": 10
+                },
+                "upgrade": {
+                    "体质潜力": 1,
+                    "力道潜力": 1,
+                    "意志潜力": 1,
+                    "智力潜力": 1,
+                    "灵巧潜力": 1,
+                    "经脉潜力": 1
+                },
+                "use": []
+            },
+            "type_name": "내공",
+            "upgrade_text": "力道潜力+1, 灵巧潜力+1, 智力潜力+1, 意志潜力+1, 体质潜力+1, 经脉潜力+1",
+            "upgrade_total": 6.0,
+            "use_text": "",
+            "weapon": ""
+        },
+        {
+            "atk_posture": [],
+            "atk_range": "0-0",
+            "base_dmg": 0.0,
+            "def_posture": [],
+            "desc": "조윤종(趙胤宗)이 창시한 것으로，\\n현묘함이 비할 데 없고 위력이 무궁하다。수련자의 체백(體魄)과 경맥을 천인(天人) 경지까지 끌어올려 경천위지(經天緯地)의 능력을 얻게 하니，\\n당세 제일 내공이라 일컬어진다。",
+            "dmg_bonus_text": "",
+            "dmg_range": "",
+            "effects_text": "真气喷",
+            "equip_text": "生命上限+150, 内力上限+300, 内功+10, 力道+10, 灵巧+10, 智力+10, 意志+10, 体质+10, 经脉+10",
+            "force_name": "江湖",
+            "id": 995,
+            "mana_cost": 0.0,
+            "max_use": 0,
+            "name": "龙胤归藏功",
+            "needs": "",
+            "rare_lv": 5,
+            "rare_name": "绝世",
+            "stats": {
+                "damage": [],
+                "equip": {
+                    "体质": 10,
+                    "内力上限": 300,
+                    "内功": 10,
+                    "力道": 10,
+                    "意志": 10,
+                    "智力": 10,
+                    "灵巧": 10,
+                    "生命上限": 150,
+                    "经脉": 10
+                },
+                "upgrade": {
+                    "体质潜力": 1,
+                    "力道潜力": 1,
+                    "意志潜力": 1,
+                    "智力潜力": 1,
+                    "灵巧潜力": 1,
+                    "经脉潜力": 1
+                },
+                "use": []
+            },
+            "type_name": "내공",
+            "upgrade_text": "力道潜力+1, 灵巧潜力+1, 智力潜力+1, 意志潜力+1, 体质潜力+1, 经脉潜力+1",
+            "upgrade_total": 6.0,
+            "use_text": "",
+            "weapon": ""
+        },
+        {
+            "atk_posture": [],
+            "atk_range": "0-0",
+            "base_dmg": 0.0,
+            "def_posture": [],
+            "desc": "기(氣)를 단전에 모으는 것을 중시하는 방어형 내공 심법",
+            "dmg_bonus_text": "",
+            "dmg_range": "",
+            "effects_text": "真气喷",
+            "equip_text": "内力上限+80, 内功+4, 体质+4, 减伤+2",
+            "force_name": "江湖",
+            "id": 996,
+            "mana_cost": 0.0,
+            "max_use": 0,
+            "name": "守丹田",
+            "needs": "",
+            "rare_lv": 0,
+            "rare_name": "基础",
+            "stats": {
+                "damage": [],
+                "equip": {
+                    "体质": 4,
+                    "内力上限": 80,
+                    "内功": 4,
+                    "减伤": 2
+                },
+                "upgrade": {
+                    "内功": 1,
+                    "意志": 1
+                },
+                "use": []
+            },
+            "type_name": "내공",
+            "upgrade_text": "内功+1, 意志+1",
+            "upgrade_total": 2.0,
+            "use_text": "",
+            "weapon": ""
+        },
+        {
+            "atk_posture": [],
+            "atk_range": "0-0",
+            "base_dmg": 0.0,
+            "def_posture": [],
+            "desc": "민간에 널리 퍼진 전통적인 양생 운기 법문",
+            "dmg_bonus_text": "",
+            "dmg_range": "",
+            "effects_text": "真气喷",
+            "equip_text": "生命上限+40, 内功+4, 绝技+4, 经脉+4",
+            "force_name": "江湖",
+            "id": 997,
+            "mana_cost": 0.0,
+            "max_use": 0,
+            "name": "八段锦",
+            "needs": "",
+            "rare_lv": 0,
+            "rare_name": "基础",
+            "stats": {
+                "damage": [],
+                "equip": {
+                    "内功": 4,
+                    "生命上限": 40,
+                    "经脉": 4,
+                    "绝技": 4
+                },
+                "upgrade": {
+                    "灵巧": 1,
+                    "绝技": 1
+                },
+                "use": []
+            },
+            "type_name": "내공",
+            "upgrade_text": "灵巧+1, 绝技+1",
+            "upgrade_total": 2.0,
+            "use_text": "",
+            "weapon": ""
+        },
+        {
+            "atk_posture": [],
+            "atk_range": "0-2",
+            "base_dmg": 0.0,
+            "def_posture": [],
+            "desc": "높은 허공의 밧줄 위를 걷는 곡예사의 기예",
+            "dmg_bonus_text": "",
+            "dmg_range": "",
+            "effects_text": "紫圈",
+            "equip_text": "轻功+4, 经脉+4, 反击+0",
+            "force_name": "江湖",
+            "id": 998,
+            "mana_cost": 0.0,
+            "max_use": 0,
+            "name": "走钢索",
+            "needs": "",
+            "rare_lv": 0,
+            "rare_name": "基础",
+            "stats": {
+                "damage": [],
+                "equip": {
+                    "反击": 0,
+                    "经脉": 4,
+                    "轻功": 4
+                },
+                "upgrade": {
+                    "经脉": 1
+                },
+                "use": []
+            },
+            "type_name": "경공",
+            "upgrade_text": "经脉+1",
+            "upgrade_total": 1.0,
+            "use_text": "",
+            "weapon": ""
+        },
+        {
+            "atk_posture": [],
+            "atk_range": "0-2",
+            "base_dmg": 0.0,
+            "def_posture": [],
+            "desc": "몸을 날려 불타는 둥근 테를 통과하는 곡예사의 기예",
+            "dmg_bonus_text": "",
+            "dmg_range": "",
+            "effects_text": "紫圈",
+            "equip_text": "轻功+4, 体质+4, 连击+0",
+            "force_name": "江湖",
+            "id": 999,
+            "mana_cost": 0.0,
+            "max_use": 0,
+            "name": "钻火圈",
+            "needs": "",
+            "rare_lv": 0,
+            "rare_name": "基础",
+            "stats": {
+                "damage": [],
+                "equip": {
+                    "体质": 4,
+                    "轻功": 4,
+                    "连击": 0
+                },
+                "upgrade": {
+                    "体质": 1
+                },
+                "use": []
+            },
+            "type_name": "경공",
+            "upgrade_text": "体质+1",
+            "upgrade_total": 1.0,
+            "use_text": "",
+            "weapon": ""
+        },
+        {
+            "atk_posture": [],
+            "atk_range": "0-0",
+            "base_dmg": 0.0,
+            "def_posture": [],
+            "desc": "솔교(씨름)의 기법에서 진화되어 온 무공",
+            "dmg_bonus_text": "",
+            "dmg_range": "",
+            "effects_text": "护盾",
+            "equip_text": "绝技+4, 力道+4, 压制+0",
+            "force_name": "江湖",
+            "id": 1000,
+            "mana_cost": 0.0,
+            "max_use": 0,
+            "name": "‌角抵法",
+            "needs": "",
+            "rare_lv": 0,
+            "rare_name": "基础",
+            "stats": {
+                "damage": [],
+                "equip": {
+                    "力道": 4,
+                    "压制": 0,
+                    "绝技": 4
+                },
+                "upgrade": {
+                    "力道": 1
+                },
+                "use": []
+            },
+            "type_name": "절기",
+            "upgrade_text": "力道+1",
+            "upgrade_total": 1.0,
+            "use_text": "",
+            "weapon": ""
+        },
+        {
+            "atk_posture": [],
+            "atk_range": "0-0",
+            "base_dmg": 0.0,
+            "def_posture": [],
+            "desc": "화타가 창안한，다섯 짐승의 움직임을 본뜬 도인 양생법",
+            "dmg_bonus_text": "",
+            "dmg_range": "",
+            "effects_text": "护盾",
+            "equip_text": "灵巧+4, 智力+4, 命中+0",
+            "force_name": "江湖",
+            "id": 1001,
+            "mana_cost": 0.0,
+            "max_use": 0,
+            "name": "五禽戏",
+            "needs": "",
+            "rare_lv": 0,
+            "rare_name": "基础",
+            "stats": {
+                "damage": [],
+                "equip": {
+                    "命中": 0,
+                    "智力": 4,
+                    "灵巧": 4
+                },
+                "upgrade": {
+                    "智力": 1
+                },
+                "use": []
+            },
+            "type_name": "절기",
+            "upgrade_text": "智力+1",
+            "upgrade_total": 1.0,
+            "use_text": "",
+            "weapon": ""
+        },
+        {
+            "atk_posture": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                16.0,
+                0.0
+            ],
+            "atk_range": "1-1",
+            "base_dmg": 8.0,
+            "def_posture": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                10.0,
+                0.0
+            ],
+            "desc": "원숭이의 움직임을 본뜬 조잡한 권법",
+            "dmg_bonus_text": "영교(민첩)2,권장3,내력0.2",
+            "dmg_range": "",
+            "effects_text": "爪痕, 叶轮",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1002,
+            "mana_cost": 3.0,
+            "max_use": 0,
+            "name": "猴拳",
+            "needs": "",
+            "rare_lv": 0,
+            "rare_name": "基础",
+            "stats": {
+                "damage": {
+                    "권장": 3,
+                    "내력": 0.2,
+                    "영교(민첩)": 2
+                },
+                "equip": [],
+                "upgrade": {
+                    "拳掌": 1
+                },
+                "use": {
+                    "急速": 6
+                }
+            },
+            "type_name": "권장",
+            "upgrade_text": "拳掌+1",
+            "upgrade_total": 1.0,
+            "use_text": "急速+6%",
+            "weapon": "拳"
+        },
+        {
+            "atk_posture": [
+                0.0,
+                16.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "atk_range": "1-2",
+            "base_dmg": 11.0,
+            "def_posture": [
+                0.0,
+                8.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "desc": "체백(체력) 단련을 강조하며，손바닥으로 벽돌을 격파하는 공법",
+            "dmg_bonus_text": "역도(힘)3,권장1,내력0.1",
+            "dmg_range": "",
+            "effects_text": "劈砍",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1003,
+            "mana_cost": 5.0,
+            "max_use": 0,
+            "name": "劈砖掌",
+            "needs": "",
+            "rare_lv": 0,
+            "rare_name": "基础",
+            "stats": {
+                "damage": {
+                    "권장": 1,
+                    "내력": 0.1,
+                    "역도(힘)": 3
+                },
+                "equip": [],
+                "upgrade": {
+                    "力道": 1
+                },
+                "use": {
+                    "眩晕": 3
+                }
+            },
+            "type_name": "권장",
+            "upgrade_text": "力道+1",
+            "upgrade_total": 1.0,
+            "use_text": "眩晕+3%",
+            "weapon": "拳"
+        },
+        {
+            "atk_posture": [
+                0.0,
+                0.0,
+                18.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "atk_range": "1-1",
+            "base_dmg": 11.0,
+            "def_posture": [
+                0.0,
+                0.0,
+                4.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "desc": "검으로 목표를 곧게 찌르는 기초 법문",
+            "dmg_bonus_text": "의지1,검법2,내력0.2",
+            "dmg_range": "",
+            "effects_text": "穿刺_灰黄",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1004,
+            "mana_cost": 5.0,
+            "max_use": 0,
+            "name": "刺剑术",
+            "needs": "",
+            "rare_lv": 0,
+            "rare_name": "基础",
+            "stats": {
+                "damage": {
+                    "검법": 2,
+                    "내력": 0.2,
+                    "의지": 1
+                },
+                "equip": [],
+                "upgrade": {
+                    "剑法": 1
+                },
+                "use": {
+                    "弱点": 5
+                }
+            },
+            "type_name": "검법",
+            "upgrade_text": "剑法+1",
+            "upgrade_total": 1.0,
+            "use_text": "弱点+5%",
+            "weapon": "剑"
+        },
+        {
+            "atk_posture": [
+                14.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "atk_range": "1-1",
+            "base_dmg": 9.0,
+            "def_posture": [
+                12.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "desc": "무용의 기법에서 유래하여 다분히 공연의 성격을 띤 무공",
+            "dmg_bonus_text": "경맥2,검법3,내력0.2",
+            "dmg_range": "",
+            "effects_text": "乱刃",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1005,
+            "mana_cost": 4.0,
+            "max_use": 0,
+            "name": "剑器舞",
+            "needs": "",
+            "rare_lv": 0,
+            "rare_name": "基础",
+            "stats": {
+                "damage": {
+                    "검법": 3,
+                    "경맥": 2,
+                    "내력": 0.2
+                },
+                "equip": [],
+                "upgrade": {
+                    "经脉": 1
+                },
+                "use": {
+                    "杀机": 6
+                }
+            },
+            "type_name": "검법",
+            "upgrade_text": "经脉+1",
+            "upgrade_total": 1.0,
+            "use_text": "杀机+6%",
+            "weapon": "剑"
+        },
+        {
+            "atk_posture": [
+                0.0,
+                0.0,
+                15.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "atk_range": "1-1",
+            "base_dmg": 8.0,
+            "def_posture": [
+                0.0,
+                0.0,
+                10.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "desc": "허를 찌르는 것을 중시하는 시정잡배들의 도법",
+            "dmg_bonus_text": "영교(민첩)1,도법3,내력0.2",
+            "dmg_range": "",
+            "effects_text": "劈砍_多重",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1006,
+            "mana_cost": 3.0,
+            "max_use": 0,
+            "name": "短刀术",
+            "needs": "",
+            "rare_lv": 0,
+            "rare_name": "基础",
+            "stats": {
+                "damage": {
+                    "내력": 0.2,
+                    "도법": 3,
+                    "영교(민첩)": 1
+                },
+                "equip": [],
+                "upgrade": {
+                    "刀法": 1
+                },
+                "use": {
+                    "脆弱": 6
+                }
+            },
+            "type_name": "도법",
+            "upgrade_text": "刀法+1",
+            "upgrade_total": 1.0,
+            "use_text": "脆弱+6%",
+            "weapon": "刀"
+        },
+        {
+            "atk_posture": [
+                0.0,
+                0.0,
+                0.0,
+                18.0,
+                0.0,
+                0.0
+            ],
+            "atk_range": "1-2",
+            "base_dmg": 13.0,
+            "def_posture": [
+                0.0,
+                0.0,
+                0.0,
+                2.0,
+                0.0,
+                0.0
+            ],
+            "desc": "초식은 조잡하나 목숨을 걸고 싸우는 도법으로，대개 도적 떼가 즐겨 쓴다",
+            "dmg_bonus_text": "역도(힘)3,도법1",
+            "dmg_range": "",
+            "effects_text": "爆血",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1007,
+            "mana_cost": 8.0,
+            "max_use": 0,
+            "name": "贼寇刀法",
+            "needs": "",
+            "rare_lv": 0,
+            "rare_name": "基础",
+            "stats": {
+                "damage": {
+                    "도법": 1,
+                    "역도(힘)": 3
+                },
+                "equip": [],
+                "upgrade": {
+                    "体质": 1
+                },
+                "use": {
+                    "击退": 100
+                }
+            },
+            "type_name": "도법",
+            "upgrade_text": "体质+1",
+            "upgrade_total": 1.0,
+            "use_text": "击退+100%",
+            "weapon": "刀"
+        },
+        {
+            "atk_posture": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                14.0
+            ],
+            "atk_range": "0-0",
+            "base_dmg": 9.0,
+            "def_posture": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                12.0
+            ],
+            "desc": "허초로 상대를 현혹하는 창법",
+            "dmg_bonus_text": "지력1,장병3,내력0.2",
+            "dmg_range": "",
+            "effects_text": "莲花转",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1008,
+            "mana_cost": 4.0,
+            "max_use": 0,
+            "name": "花枪法",
+            "needs": "",
+            "rare_lv": 0,
+            "rare_name": "基础",
+            "stats": {
+                "damage": {
+                    "내력": 0.2,
+                    "장병": 3,
+                    "지력": 1
+                },
+                "equip": [],
+                "upgrade": {
+                    "长兵": 1
+                },
+                "use": {
+                    "笨拙": 5
+                }
+            },
+            "type_name": "장병",
+            "upgrade_text": "长兵+1",
+            "upgrade_total": 1.0,
+            "use_text": "笨拙+5%",
+            "weapon": "长兵"
+        },
+        {
+            "atk_posture": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                15.0,
+                0.0
+            ],
+            "atk_range": "1-1",
+            "base_dmg": 11.0,
+            "def_posture": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                8.0,
+                0.0
+            ],
+            "desc": "유연성이 비교적 높은 단곤 곤법",
+            "dmg_bonus_text": "의지2,장병2,내력0.1",
+            "dmg_range": "",
+            "effects_text": "打击1",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1009,
+            "mana_cost": 5.0,
+            "max_use": 0,
+            "name": "双节棍法",
+            "needs": "",
+            "rare_lv": 0,
+            "rare_name": "基础",
+            "stats": {
+                "damage": {
+                    "내력": 0.1,
+                    "의지": 2,
+                    "장병": 2
+                },
+                "equip": [],
+                "upgrade": {
+                    "意志": 1
+                },
+                "use": {
+                    "疲劳": 4
+                }
+            },
+            "type_name": "장병",
+            "upgrade_text": "意志+1",
+            "upgrade_total": 1.0,
+            "use_text": "疲劳+4%",
+            "weapon": "长兵"
+        },
+        {
+            "atk_posture": [
+                0.0,
+                12.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "atk_range": "0-0",
+            "base_dmg": 10.0,
+            "def_posture": [
+                0.0,
+                10.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "desc": "철선을 병장기로 삼는 기초 기문 공법",
+            "dmg_bonus_text": "체질2,기문3,내력0.1",
+            "dmg_range": "",
+            "effects_text": "旋叶",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1010,
+            "mana_cost": 4.0,
+            "max_use": 0,
+            "name": "铁扇功",
+            "needs": "",
+            "rare_lv": 0,
+            "rare_name": "基础",
+            "stats": {
+                "damage": {
+                    "기문": 3,
+                    "내력": 0.1,
+                    "체질": 2
+                },
+                "equip": [],
+                "upgrade": {
+                    "奇门": 1
+                },
+                "use": {
+                    "失衡": 4
+                }
+            },
+            "type_name": "기문",
+            "upgrade_text": "奇门+1",
+            "upgrade_total": 1.0,
+            "use_text": "失衡+4%",
+            "weapon": "扇"
+        },
+        {
+            "atk_posture": [
+                0.0,
+                0.0,
+                0.0,
+                16.0,
+                0.0,
+                0.0
+            ],
+            "atk_range": "0-0",
+            "base_dmg": 8.0,
+            "def_posture": [
+                0.0,
+                0.0,
+                0.0,
+                8.0,
+                0.0,
+                0.0
+            ],
+            "desc": "무예를 처음 익히는 자가 혈도를 분별하는 데 쓰는 기문 공법",
+            "dmg_bonus_text": "지력3,기문2,내력0.2",
+            "dmg_range": "",
+            "effects_text": "墨劈",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1011,
+            "mana_cost": 3.0,
+            "max_use": 0,
+            "name": "点穴笔",
+            "needs": "",
+            "rare_lv": 0,
+            "rare_name": "基础",
+            "stats": {
+                "damage": {
+                    "기문": 2,
+                    "내력": 0.2,
+                    "지력": 3
+                },
+                "equip": [],
+                "upgrade": {
+                    "智力": 1
+                },
+                "use": {
+                    "头颈点穴": 6
+                }
+            },
+            "type_name": "기문",
+            "upgrade_text": "智力+1",
+            "upgrade_total": 1.0,
+            "use_text": "头颈点穴+6%",
+            "weapon": "笔"
+        },
+        {
+            "atk_posture": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                20.0
+            ],
+            "atk_range": "2-4",
+            "base_dmg": 9.0,
+            "def_posture": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                3.0
+            ],
+            "desc": "깃이 달린 화살을 사용하는 기초 수법",
+            "dmg_bonus_text": "영교(민첩)1,사술2,내력0.2",
+            "dmg_range": "",
+            "effects_text": "劈砍",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1012,
+            "mana_cost": 4.0,
+            "max_use": 0,
+            "name": "飞箭要诀",
+            "needs": "",
+            "rare_lv": 0,
+            "rare_name": "基础",
+            "stats": {
+                "damage": {
+                    "내력": 0.2,
+                    "사술": 2,
+                    "영교(민첩)": 1
+                },
+                "equip": [],
+                "upgrade": {
+                    "射术": 1
+                },
+                "use": {
+                    "鹰眼": 6
+                }
+            },
+            "type_name": "사술",
+            "upgrade_text": "射术+1",
+            "upgrade_total": 1.0,
+            "use_text": "鹰眼+6%",
+            "weapon": "弓"
+        },
+        {
+            "atk_posture": [
+                20.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "atk_range": "1-3",
+            "base_dmg": 11.0,
+            "def_posture": [
+                3.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "desc": "돌멩이를 사용하는 기초 수법",
+            "dmg_bonus_text": "체질3,사술1,내력0.1",
+            "dmg_range": "",
+            "effects_text": "打击2",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1013,
+            "mana_cost": 5.0,
+            "max_use": 0,
+            "name": "飞石要诀",
+            "needs": "",
+            "rare_lv": 0,
+            "rare_name": "基础",
+            "stats": {
+                "damage": {
+                    "내력": 0.1,
+                    "사술": 1,
+                    "체질": 3
+                },
+                "equip": [],
+                "upgrade": {
+                    "灵巧": 1
+                },
+                "use": {
+                    "昏沉": 4
+                }
+            },
+            "type_name": "사술",
+            "upgrade_text": "灵巧+1",
+            "upgrade_total": 1.0,
+            "use_text": "昏沉+4%",
+            "weapon": ""
+        },
+        {
+            "atk_posture": [],
+            "atk_range": "0-0",
+            "base_dmg": 0.0,
+            "def_posture": [],
+            "desc": "수미산이 겨자씨에 들어가고 겨자씨가 수미산을 품는 형국이라. 이 공법은 방대한 내력을 단전으로 압축하여 겉보기엔 평범하나，한 번 폭발하면 산사태처럼 막을 길이 없다",
+            "dmg_bonus_text": "",
+            "dmg_range": "",
+            "effects_text": "真气喷",
+            "equip_text": "生命上限+75, 内力上限+250, 内功+6, 意志+12, 经脉+12, 内劲+0, 蓄力+0",
+            "force_name": "江湖",
+            "id": 1014,
+            "mana_cost": 0.0,
+            "max_use": 0,
+            "name": "须弥神功",
+            "needs": "",
+            "rare_lv": 4,
+            "rare_name": "顶极",
+            "stats": {
+                "damage": [],
+                "equip": {
+                    "内力上限": 250,
+                    "内功": 6,
+                    "内劲": 0,
+                    "意志": 12,
+                    "生命上限": 75,
+                    "经脉": 12,
+                    "蓄力": 0
+                },
+                "upgrade": {
+                    "内功": 1,
+                    "意志": 1,
+                    "意志潜力": 1,
+                    "经脉潜力": 1
+                },
+                "use": []
+            },
+            "type_name": "내공",
+            "upgrade_text": "经脉潜力+1, 意志潜力+1, 内功+1, 意志+1",
+            "upgrade_total": 4.0,
+            "use_text": "",
+            "weapon": ""
+        },
+        {
+            "atk_posture": [],
+            "atk_range": "0-0",
+            "base_dmg": 0.0,
+            "def_posture": [],
+            "desc": "수련에 성공한 이가 드문 기공. 경맥을 운기할 때 피부가 묵옥처럼 검게 빛나며，수화가 침범하지 못하고 도검조차 뚫지 못한다",
+            "dmg_bonus_text": "",
+            "dmg_range": "",
+            "effects_text": "真气喷",
+            "equip_text": "生命上限+125, 内力上限+150, 内功+12, 体质+12, 经脉+6, 霸体+0, 不屈+0, 坚毅+0",
+            "force_name": "江湖",
+            "id": 1015,
+            "mana_cost": 0.0,
+            "max_use": 0,
+            "name": "墨玉心诀",
+            "needs": "",
+            "rare_lv": 4,
+            "rare_name": "顶极",
+            "stats": {
+                "damage": [],
+                "equip": {
+                    "不屈": 0,
+                    "体质": 12,
+                    "内力上限": 150,
+                    "内功": 12,
+                    "坚毅": 0,
+                    "生命上限": 125,
+                    "经脉": 6,
+                    "霸体": 0
+                },
+                "upgrade": {
+                    "体质": 1,
+                    "体质潜力": 1,
+                    "内功潜力": 1,
+                    "经脉": 1
+                },
+                "use": []
+            },
+            "type_name": "내공",
+            "upgrade_text": "内功潜力+1, 体质潜力+1, 体质+1, 经脉+1",
+            "upgrade_total": 4.0,
+            "use_text": "",
+            "weapon": ""
+        },
+        {
+            "atk_posture": [],
+            "atk_range": "0-4",
+            "base_dmg": 0.0,
+            "def_posture": [],
+            "desc": "하늘 가득 흙먼지를 일으키며 몸을 땅에 밀착시켜 빠르게 미끄러지는 기이한 경공. 신출귀몰하여 행방을 묘연히 하니，마치 둔갑술이나 선술 같다",
+            "dmg_bonus_text": "",
+            "dmg_range": "",
+            "effects_text": "紫圈",
+            "equip_text": "轻功+12, 灵巧+8, 经脉+10, 飘逸+0, 疲劳+0",
+            "force_name": "江湖",
+            "id": 1016,
+            "mana_cost": 0.0,
+            "max_use": 0,
+            "name": "遁地潜行",
+            "needs": "",
+            "rare_lv": 4,
+            "rare_name": "顶极",
+            "stats": {
+                "damage": [],
+                "equip": {
+                    "灵巧": 8,
+                    "疲劳": 0,
+                    "经脉": 10,
+                    "轻功": 12,
+                    "飘逸": 0
+                },
+                "upgrade": {
+                    "灵巧潜力": 1,
+                    "经脉": 1,
+                    "经脉潜力": 1,
+                    "轻功": 1
+                },
+                "use": []
+            },
+            "type_name": "경공",
+            "upgrade_text": "灵巧潜力+1, 经脉潜力+1, 轻功+1, 经脉+1",
+            "upgrade_total": 4.0,
+            "use_text": "",
+            "weapon": ""
+        },
+        {
+            "atk_posture": [],
+            "atk_range": "0-4",
+            "base_dmg": 0.0,
+            "def_posture": [],
+            "desc": "세외 고수가 태산 정상에서 일출을 보던 중，구름과 안개가 바다처럼 굽이치며 솟아오르는 것을 보고 깨달은 보법. 대성한 자는 구름을 딛고 허공 수십 장 위까지 단숨에 오를 수 있다",
+            "dmg_bonus_text": "",
+            "dmg_range": "",
+            "effects_text": "紫圈",
+            "equip_text": "轻功+8, 智力+12, 体质+10, 轻灵+0, 破招+0",
+            "force_name": "江湖",
+            "id": 1017,
+            "mana_cost": 0.0,
+            "max_use": 0,
+            "name": "凌霄天外",
+            "needs": "",
+            "rare_lv": 4,
+            "rare_name": "顶极",
+            "stats": {
+                "damage": [],
+                "equip": {
+                    "体质": 10,
+                    "智力": 12,
+                    "破招": 0,
+                    "轻功": 8,
+                    "轻灵": 0
+                },
+                "upgrade": {
+                    "体质潜力": 1,
+                    "智力潜力": 1,
+                    "轻功潜力": 1
+                },
+                "use": []
+            },
+            "type_name": "경공",
+            "upgrade_text": "轻功潜力+1, 智力潜力+1, 体质潜力+1",
+            "upgrade_total": 3.0,
+            "use_text": "",
+            "weapon": ""
+        },
+        {
+            "atk_posture": [],
+            "atk_range": "0-0",
+            "base_dmg": 0.0,
+            "def_posture": [],
+            "desc": "건곤의 기운을 흉복에 품어 조화시키니，평범한 초식조차 순식간에 경이로운 위력을 발휘하게 한다",
+            "dmg_bonus_text": "",
+            "dmg_range": "",
+            "effects_text": "护盾",
+            "equip_text": "绝技+6, 力道+12, 经脉+12, 眩晕+0, 通脉+0",
+            "force_name": "江湖",
+            "id": 1018,
+            "mana_cost": 0.0,
+            "max_use": 0,
+            "name": "乾坤一气劲",
+            "needs": "",
+            "rare_lv": 4,
+            "rare_name": "顶极",
+            "stats": {
+                "damage": [],
+                "equip": {
+                    "力道": 12,
+                    "眩晕": 0,
+                    "经脉": 12,
+                    "绝技": 6,
+                    "通脉": 0
+                },
+                "upgrade": {
+                    "力道": 1,
+                    "力道潜力": 1,
+                    "经脉潜力": 1,
+                    "绝技": 1
+                },
+                "use": []
+            },
+            "type_name": "절기",
+            "upgrade_text": "力道潜力+1, 经脉潜力+1, 绝技+1, 力道+1",
+            "upgrade_total": 4.0,
+            "use_text": "",
+            "weapon": ""
+        },
+        {
+            "atk_posture": [],
+            "atk_range": "0-0",
+            "base_dmg": 0.0,
+            "def_posture": [],
+            "desc": "손가락으로 양측의 초식과 거리를 셈하는 기이한 기법. 지혜가 뛰어난 자는 이를 통해 마치 선인의 지도를 받은 듯 상대의 움직임을 미리 읽어낼 수 있다",
+            "dmg_bonus_text": "",
+            "dmg_range": "",
+            "effects_text": "护盾",
+            "equip_text": "绝技+8, 智力+12, 体质+10, 慧眼+0, 弱点+0, 拆招+0",
+            "force_name": "江湖",
+            "id": 1019,
+            "mana_cost": 0.0,
+            "max_use": 0,
+            "name": "仙人指路",
+            "needs": "",
+            "rare_lv": 4,
+            "rare_name": "顶极",
+            "stats": {
+                "damage": [],
+                "equip": {
+                    "体质": 10,
+                    "弱点": 0,
+                    "慧眼": 0,
+                    "拆招": 0,
+                    "智力": 12,
+                    "绝技": 8
+                },
+                "upgrade": {
+                    "体质潜力": 1,
+                    "智力": 1,
+                    "智力潜力": 1,
+                    "绝技": 1
+                },
+                "use": []
+            },
+            "type_name": "절기",
+            "upgrade_text": "智力潜力+1, 体质潜力+1, 绝技+1, 智力+1",
+            "upgrade_total": 4.0,
+            "use_text": "",
+            "weapon": ""
+        },
+        {
+            "atk_posture": [
+                0.0,
+                0.0,
+                10.0,
+                14.0,
+                0.0,
+                0.0
+            ],
+            "atk_range": "1-2",
+            "base_dmg": 23.0,
+            "def_posture": [
+                0.0,
+                0.0,
+                5.0,
+                9.0,
+                0.0,
+                0.0
+            ],
+            "desc": "이 장법은 단전에 혼원의 기를 모아야 한다. 오행에 속하지 않고 음양에 구속되지 않으며 자연과 하나가 되니，혼돈이 열릴 때의 힘으로 상대의 내식을 무형으로 흩어버린다",
+            "dmg_bonus_text": "영교(민첩)2,경맥1,권장3,내력0.5",
+            "dmg_range": "",
+            "effects_text": "闪光, 真气喷",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1020,
+            "mana_cost": 28.0,
+            "max_use": 0,
+            "name": "混元掌力",
+            "needs": "",
+            "rare_lv": 4,
+            "rare_name": "顶极",
+            "stats": {
+                "damage": {
+                    "경맥": 1,
+                    "권장": 3,
+                    "내력": 0.5,
+                    "영교(민첩)": 2
+                },
+                "equip": [],
+                "upgrade": {
+                    "拳掌潜力": 1,
+                    "灵巧潜力": 1,
+                    "经脉潜力": 1
+                },
+                "use": {
+                    "不愈": 4,
+                    "削内": 16,
+                    "雷电": 4
+                }
+            },
+            "type_name": "권장",
+            "upgrade_text": "拳掌潜力+1, 灵巧潜力+1, 经脉潜力+1",
+            "upgrade_total": 3.0,
+            "use_text": "不愈+4%, 雷电+4%, 削内+16%",
+            "weapon": "拳"
+        },
+        {
+            "atk_posture": [
+                18.0,
+                12.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "atk_range": "0-0",
+            "base_dmg": 19.0,
+            "def_posture": [
+                6.0,
+                4.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "desc": "이 권법은 달의 차고 이지러짐을 융합하였다. 보름달일 때는 권경이 지극히 강양하고，그믐달일 때는 권경이 지극히 음유하니，거두고 내지르는 묘리를 종잡을 수 없어 상대하기가 몹시 까다롭다",
+            "dmg_bonus_text": "지력3,체질3,권장2,내력0.3",
+            "dmg_range": "",
+            "effects_text": "弯月",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1021,
+            "mana_cost": 24.0,
+            "max_use": 0,
+            "name": "皓月拳",
+            "needs": "",
+            "rare_lv": 4,
+            "rare_name": "顶极",
+            "stats": {
+                "damage": {
+                    "권장": 2,
+                    "내력": 0.3,
+                    "지력": 3,
+                    "체질": 3
+                },
+                "equip": [],
+                "upgrade": {
+                    "体质潜力": 1,
+                    "拳掌": 1,
+                    "智力": 1,
+                    "智力潜力": 1
+                },
+                "use": {
+                    "内伤": 4,
+                    "外伤": 4,
+                    "破招": 4
+                }
+            },
+            "type_name": "권장",
+            "upgrade_text": "智力潜力+1, 体质潜力+1, 拳掌+1, 智力+1",
+            "upgrade_total": 4.0,
+            "use_text": "外伤+4%, 内伤+4%, 破招+4%",
+            "weapon": "拳"
+        },
+        {
+            "atk_posture": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                12.0,
+                10.0
+            ],
+            "atk_range": "1-2",
+            "base_dmg": 19.0,
+            "def_posture": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                12.0,
+                10.0
+            ],
+            "desc": "소문에 달마 대사가 창안한 고묘한 검법이라 한다. 소림의 승려 중 검을 익히는 자가 드물어 장경각에서 유출된 뒤 강호에 흩어졌으니，그 전모를 본 자가 거의 없다",
+            "dmg_bonus_text": "지력2,의지3,검법2,내력0.3",
+            "dmg_range": "",
+            "effects_text": "佛升, 劈砍_黑白",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1022,
+            "mana_cost": 22.0,
+            "max_use": 0,
+            "name": "达摩剑法",
+            "needs": "",
+            "rare_lv": 4,
+            "rare_name": "顶极",
+            "stats": {
+                "damage": {
+                    "검법": 2,
+                    "내력": 0.3,
+                    "의지": 3,
+                    "지력": 2
+                },
+                "equip": [],
+                "upgrade": {
+                    "剑法": 1,
+                    "意志潜力": 1,
+                    "智力": 1,
+                    "智力潜力": 1
+                },
+                "use": {
+                    "定神": 6,
+                    "醒脑": 6
+                }
+            },
+            "type_name": "검법",
+            "upgrade_text": "智力潜力+1, 意志潜力+1, 剑法+1, 智力+1",
+            "upgrade_total": 4.0,
+            "use_text": "醒脑+6%, 定神+6%",
+            "weapon": "剑"
+        },
+        {
+            "atk_posture": [
+                0.0,
+                0.0,
+                20.0,
+                12.0,
+                0.0,
+                0.0
+            ],
+            "atk_range": "2-2",
+            "base_dmg": 25.0,
+            "def_posture": [
+                0.0,
+                0.0,
+                6.0,
+                4.0,
+                0.0,
+                0.0
+            ],
+            "desc": "투박하고 화려함이 없는 검초 같으나，곧게 뻗고 거두는 사이 천근의 무게가 담겨 있으니，가히 대교약졸(큰 기교는 졸박해 보인다)의 지고한 경지에 이른 검법이라 할 수 있다",
+            "dmg_bonus_text": "역도(힘)5,검법2,내력0.1",
+            "dmg_range": "",
+            "effects_text": "墨爪爆, 碎地",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1023,
+            "mana_cost": 30.0,
+            "max_use": 0,
+            "name": "重剑无锋",
+            "needs": "",
+            "rare_lv": 4,
+            "rare_name": "顶极",
+            "stats": {
+                "damage": {
+                    "검법": 2,
+                    "내력": 0.1,
+                    "역도(힘)": 5
+                },
+                "equip": [],
+                "upgrade": {
+                    "剑法潜力": 1,
+                    "力道潜力": 2
+                },
+                "use": {
+                    "壮骨": 6,
+                    "穿甲": 6
+                }
+            },
+            "type_name": "검법",
+            "upgrade_text": "剑法潜力+1, 力道潜力+2",
+            "upgrade_total": 3.0,
+            "use_text": "壮骨+6%, 穿甲+6%",
+            "weapon": "剑"
+        },
+        {
+            "atk_posture": [
+                13.0,
+                0.0,
+                0.0,
+                11.0,
+                0.0,
+                0.0
+            ],
+            "atk_range": "1-3",
+            "base_dmg": 21.0,
+            "def_posture": [
+                8.0,
+                0.0,
+                0.0,
+                6.0,
+                0.0,
+                0.0
+            ],
+            "desc": "뼛속까지 시린 한빙의 내력으로 초식을 펼쳐，하늘 가득 눈보라를 일으켜 주변의 적들을 뒤덮는 고심한 도법",
+            "dmg_bonus_text": "경맥4,도법3,내력0.4",
+            "dmg_range": "",
+            "effects_text": "冰龙卷",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1024,
+            "mana_cost": 21.0,
+            "max_use": 0,
+            "name": "风雪狂刀",
+            "needs": "",
+            "rare_lv": 4,
+            "rare_name": "顶极",
+            "stats": {
+                "damage": {
+                    "경맥": 4,
+                    "내력": 0.4,
+                    "도법": 3
+                },
+                "equip": [],
+                "upgrade": {
+                    "内功": 1,
+                    "刀法潜力": 1,
+                    "经脉": 1,
+                    "经脉潜力": 1
+                },
+                "use": {
+                    "冰寒": 6,
+                    "连绵": 6
+                }
+            },
+            "type_name": "도법",
+            "upgrade_text": "刀法潜力+1, 经脉潜力+1, 内功+1, 经脉+1",
+            "upgrade_total": 4.0,
+            "use_text": "冰寒+6%, 连绵+6%",
+            "weapon": "刀"
+        },
+        {
+            "atk_posture": [
+                0.0,
+                14.0,
+                12.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "atk_range": "1-2",
+            "base_dmg": 24.0,
+            "def_posture": [
+                0.0,
+                7.0,
+                5.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "desc": "도를 뽑으면 우레가 진노한 듯하여 만군을 물리치고，진형을 흩는 것이 개미를 짓밟는 것과 같으니，수많은 전장을 겪은 자라도 감히 그 예봉을 막아서지 못한다",
+            "dmg_bonus_text": "의지2,도법4,내력0.1",
+            "dmg_range": "",
+            "effects_text": "闪光, 音波",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1025,
+            "mana_cost": 26.0,
+            "max_use": 0,
+            "name": "秦王破阵刀",
+            "needs": "",
+            "rare_lv": 4,
+            "rare_name": "顶极",
+            "stats": {
+                "damage": {
+                    "내력": 0.1,
+                    "도법": 4,
+                    "의지": 2
+                },
+                "equip": [],
+                "upgrade": {
+                    "刀法": 1,
+                    "意志": 1,
+                    "意志潜力": 1,
+                    "灵巧潜力": 1
+                },
+                "use": {
+                    "破甲": 6,
+                    "穿甲": 6
+                }
+            },
+            "type_name": "도법",
+            "upgrade_text": "灵巧潜力+1, 意志潜力+1, 刀法+1, 意志+1",
+            "upgrade_total": 4.0,
+            "use_text": "穿甲+6%, 破甲+6%",
+            "weapon": "刀"
+        },
+        {
+            "atk_posture": [
+                10.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                14.0
+            ],
+            "atk_range": "1-2",
+            "base_dmg": 22.0,
+            "def_posture": [
+                6.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                8.0
+            ],
+            "desc": "소문에 무성왕 황비호가 쓰던 것이라 전해진다. 극히 경쾌하고 날렵하게 움직이는 창법으로，때로는 갈대꽃이 어지러이 흩날리듯 떨어지고，때로는 맹호가 산을 내려오듯 거침이 없다",
+            "dmg_bonus_text": "역도(힘)2,영교(민첩)2,장병4,내력0.1",
+            "dmg_range": "",
+            "effects_text": "羽毛, 猛虎",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1026,
+            "mana_cost": 24.0,
+            "max_use": 0,
+            "name": "飞虎提芦枪",
+            "needs": "",
+            "rare_lv": 4,
+            "rare_name": "顶极",
+            "stats": {
+                "damage": {
+                    "내력": 0.1,
+                    "역도(힘)": 2,
+                    "영교(민첩)": 2,
+                    "장병": 4
+                },
+                "equip": [],
+                "upgrade": {
+                    "力道": 1,
+                    "力道潜力": 1,
+                    "长兵": 1,
+                    "长兵潜力": 1
+                },
+                "use": {
+                    "断骨": 6,
+                    "舒筋": 6
+                }
+            },
+            "type_name": "장병",
+            "upgrade_text": "长兵潜力+1, 力道潜力+1, 长兵+1, 力道+1",
+            "upgrade_total": 4.0,
+            "use_text": "舒筋+6%, 断骨+6%",
+            "weapon": "长兵"
+        },
+        {
+            "atk_posture": [
+                0.0,
+                0.0,
+                14.0,
+                0.0,
+                10.0,
+                0.0
+            ],
+            "atk_range": "1-2",
+            "base_dmg": 19.0,
+            "def_posture": [
+                0.0,
+                0.0,
+                8.0,
+                0.0,
+                8.0,
+                0.0
+            ],
+            "desc": "이 곤법은 총 여덟 개의 초식으로 이루어져 있으며，각각 불교의 팔부호법에 대응한다. 여덟 초식을 한꺼번에 펼치면 곤의 그림자가 팔부천룡으로 화하여 모든 사마외도를 진압할 수 있다",
+            "dmg_bonus_text": "지력3,경맥3,장병3,내력0.3",
+            "dmg_range": "",
+            "effects_text": "佛爆, 旋棍",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1027,
+            "mana_cost": 22.0,
+            "max_use": 0,
+            "name": "天龙八棍法",
+            "needs": "",
+            "rare_lv": 4,
+            "rare_name": "顶极",
+            "stats": {
+                "damage": {
+                    "경맥": 3,
+                    "내력": 0.3,
+                    "장병": 3,
+                    "지력": 3
+                },
+                "equip": [],
+                "upgrade": {
+                    "智力潜力": 1,
+                    "经脉潜力": 1,
+                    "长兵潜力": 1
+                },
+                "use": {
+                    "笨拙": 6,
+                    "震脑": 6
+                }
+            },
+            "type_name": "장병",
+            "upgrade_text": "智力潜力+1, 经脉潜力+1, 长兵潜力+1",
+            "upgrade_total": 3.0,
+            "use_text": "震脑+6%, 笨拙+6%",
+            "weapon": "长兵"
+        },
+        {
+            "atk_posture": [
+                14.0,
+                0.0,
+                0.0,
+                10.0,
+                0.0,
+                0.0
+            ],
+            "atk_range": "0-0",
+            "base_dmg": 19.0,
+            "def_posture": [
+                7.0,
+                0.0,
+                0.0,
+                7.0,
+                0.0,
+                0.0
+            ],
+            "desc": "극열의 내력을 부채 표면에 쏟아붓는 법문. 허공에 부채질을 하면 극도로 뜨거운 금빛 열염이 뿜어져 나와，닿는 자는 순식간에 숯덩이로 변한다",
+            "dmg_bonus_text": "역도(힘)1,경맥4,기문2,내력0.5",
+            "dmg_range": "",
+            "effects_text": "火圈",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1028,
+            "mana_cost": 23.0,
+            "max_use": 0,
+            "name": "五火七翎扇",
+            "needs": "",
+            "rare_lv": 4,
+            "rare_name": "顶极",
+            "stats": {
+                "damage": {
+                    "경맥": 4,
+                    "기문": 2,
+                    "내력": 0.5,
+                    "역도(힘)": 1
+                },
+                "equip": [],
+                "upgrade": {
+                    "力道潜力": 1,
+                    "奇门": 1,
+                    "经脉": 1,
+                    "经脉潜力": 1
+                },
+                "use": {
+                    "混乱": 6,
+                    "灼烧": 6
+                }
+            },
+            "type_name": "기문",
+            "upgrade_text": "力道潜力+1, 经脉潜力+1, 奇门+1, 经脉+1",
+            "upgrade_total": 4.0,
+            "use_text": "灼烧+6%, 混乱+6%",
+            "weapon": "扇"
+        },
+        {
+            "atk_posture": [
+                0.0,
+                15.0,
+                0.0,
+                0.0,
+                0.0,
+                8.0
+            ],
+            "atk_range": "2-2",
+            "base_dmg": 22.0,
+            "def_posture": [
+                0.0,
+                8.0,
+                0.0,
+                0.0,
+                0.0,
+                7.0
+            ],
+            "desc": "이 전륜 공법은 총 6성으로 나뉘며，각 성은 불교의 육도 중 하나에 대응한다. 시전 시 윤회의 그림자가 끊임없이 회전하여，상대가 마치 윤회에 빠진 듯 영원히 벗어나기 어렵게 만든다",
+            "dmg_bonus_text": "체질3,기문3,내력0.3",
+            "dmg_range": "",
+            "effects_text": "血轮",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1029,
+            "mana_cost": 26.0,
+            "max_use": 0,
+            "name": "六道轮回",
+            "needs": "",
+            "rare_lv": 4,
+            "rare_name": "顶极",
+            "stats": {
+                "damage": {
+                    "기문": 3,
+                    "내력": 0.3,
+                    "체질": 3
+                },
+                "equip": [],
+                "upgrade": {
+                    "体质": 1,
+                    "体质潜力": 1,
+                    "奇门潜力": 1,
+                    "绝技": 1
+                },
+                "use": {
+                    "外伤": 4,
+                    "流血": 4,
+                    "脆弱": 4
+                }
+            },
+            "type_name": "기문",
+            "upgrade_text": "体质潜力+1, 奇门潜力+1, 绝技+1, 体质+1",
+            "upgrade_total": 4.0,
+            "use_text": "外伤+4%, 流血+4%, 脆弱+4%",
+            "weapon": "轮"
+        },
+        {
+            "atk_posture": [
+                0.0,
+                0.0,
+                0.0,
+                15.0,
+                0.0,
+                13.0
+            ],
+            "atk_range": "3-3",
+            "base_dmg": 20.0,
+            "def_posture": [
+                0.0,
+                0.0,
+                0.0,
+                5.0,
+                0.0,
+                4.0
+            ],
+            "desc": "벽력당에서 유출된 화약 제조법. 흑도 고수의 개조를 거쳐 부피가 더욱 작아지고 손을 쓰는 속도가 더 빨라져，방비하기가 몹시 까다롭다",
+            "dmg_bonus_text": "영교(민첩)2,의지2,사술2",
+            "dmg_range": "",
+            "effects_text": "爆炸星",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1030,
+            "mana_cost": 20.0,
+            "max_use": 0,
+            "name": "掌心雷",
+            "needs": "",
+            "rare_lv": 4,
+            "rare_name": "顶极",
+            "stats": {
+                "damage": {
+                    "사술": 2,
+                    "영교(민첩)": 2,
+                    "의지": 2
+                },
+                "equip": [],
+                "upgrade": {
+                    "意志": 1,
+                    "意志潜力": 1,
+                    "灵巧": 1,
+                    "灵巧潜力": 1
+                },
+                "use": {
+                    "动摇": 6,
+                    "昏沉": 6
+                }
+            },
+            "type_name": "사술",
+            "upgrade_text": "灵巧潜力+1, 意志潜力+1, 灵巧+1, 意志+1",
+            "upgrade_total": 4.0,
+            "use_text": "动摇+6%, 昏沉+6%",
+            "weapon": ""
+        },
+        {
+            "atk_posture": [
+                0.0,
+                14.0,
+                14.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "atk_range": "0-0",
+            "base_dmg": 23.0,
+            "def_posture": [
+                0.0,
+                6.0,
+                6.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "desc": "비장군 이광이 전한 궁술. 그 힘이 천근에 달해，돌을 쏘면 화살깃마저 박혀 보이지 않는다 하여 이 이름이 붙었다",
+            "dmg_bonus_text": "역도(힘)4,사술3,내력0.1",
+            "dmg_range": "",
+            "effects_text": "羽散, 地面打击5",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1031,
+            "mana_cost": 25.0,
+            "max_use": 0,
+            "name": "没羽弓术",
+            "needs": "",
+            "rare_lv": 4,
+            "rare_name": "顶极",
+            "stats": {
+                "damage": {
+                    "내력": 0.1,
+                    "사술": 3,
+                    "역도(힘)": 4
+                },
+                "equip": [],
+                "upgrade": {
+                    "体质潜力": 1,
+                    "力道": 1,
+                    "力道潜力": 1,
+                    "射术": 1
+                },
+                "use": {
+                    "击退": 200,
+                    "慧眼": 5,
+                    "鹰眼": 5
+                }
+            },
+            "type_name": "사술",
+            "upgrade_text": "力道潜力+1, 体质潜力+1, 射术+1, 力道+1",
+            "upgrade_total": 4.0,
+            "use_text": "鹰眼+5%, 慧眼+5%, 击退+200%",
+            "weapon": "弓"
+        },
+        {
+            "atk_posture": [],
+            "atk_range": "0-0",
+            "base_dmg": 0.0,
+            "def_posture": [],
+            "desc": "마하는 크다는 뜻이요，무량은 헤아릴 수 없다는 뜻이다. 이 공법을 수련하는 자는 내력이 대해처럼 무량해지며，이를 마음먹은 대로 자유자재로 통제할 수 있다",
+            "dmg_bonus_text": "",
+            "dmg_range": "",
+            "effects_text": "真气喷",
+            "equip_text": "生命上限+100, 内力上限+280, 内功+16, 力道+10, 经脉+10, 通脉+0, 雷电+0, 调息+0",
+            "force_name": "江湖",
+            "id": 1032,
+            "mana_cost": 0.0,
+            "max_use": 0,
+            "name": "摩诃无量功",
+            "needs": "",
+            "rare_lv": 5,
+            "rare_name": "绝世",
+            "stats": {
+                "damage": [],
+                "equip": {
+                    "内力上限": 280,
+                    "内功": 16,
+                    "力道": 10,
+                    "生命上限": 100,
+                    "经脉": 10,
+                    "调息": 0,
+                    "通脉": 0,
+                    "雷电": 0
+                },
+                "upgrade": {
+                    "内功潜力": 1,
+                    "力道": 2,
+                    "力道潜力": 1,
+                    "经脉潜力": 1
+                },
+                "use": []
+            },
+            "type_name": "내공",
+            "upgrade_text": "内功潜力+1, 力道潜力+1, 经脉潜力+1, 力道+2",
+            "upgrade_total": 5.0,
+            "use_text": "",
+            "weapon": ""
+        },
+        {
+            "atk_posture": [],
+            "atk_range": "0-0",
+            "base_dmg": 0.0,
+            "def_posture": [],
+            "desc": "마도의 기공. 소리 없이 상대의 경맥에 침투하여 극락의 환각과 크나큰 고통을 만들어낸다. 당한 자는 대개 일그러진 얼굴로 웃는 듯 우는 듯하여 참아 눈뜨고 보기 힘들다",
+            "dmg_bonus_text": "",
+            "dmg_range": "",
+            "effects_text": "真气喷",
+            "equip_text": "生命上限+140, 内力上限+200, 内功+12, 灵巧+12, 意志+12, 震脑+0, 乱神+0, 混乱+0",
+            "force_name": "江湖",
+            "id": 1033,
+            "mana_cost": 0.0,
+            "max_use": 0,
+            "name": "蚀骨销魂功",
+            "needs": "",
+            "rare_lv": 5,
+            "rare_name": "绝世",
+            "stats": {
+                "damage": [],
+                "equip": {
+                    "乱神": 0,
+                    "内力上限": 200,
+                    "内功": 12,
+                    "意志": 12,
+                    "混乱": 0,
+                    "灵巧": 12,
+                    "生命上限": 140,
+                    "震脑": 0
+                },
+                "upgrade": {
+                    "内功潜力": 1,
+                    "意志": 2,
+                    "意志潜力": 1,
+                    "智力潜力": 1
+                },
+                "use": []
+            },
+            "type_name": "내공",
+            "upgrade_text": "内功潜力+1, 智力潜力+1, 意志潜力+1, 意志+2",
+            "upgrade_total": 5.0,
+            "use_text": "",
+            "weapon": ""
+        },
+        {
+            "atk_posture": [],
+            "atk_range": "0-4",
+            "base_dmg": 0.0,
+            "def_posture": [],
+            "desc": "고강한 내력으로 펼치는 경공. 허공을 빠르게 가로지를 수 있으며，온몸에 진기가 맴돌아 마치 구름을 타고 안개를 모는 듯하다",
+            "dmg_bonus_text": "",
+            "dmg_range": "",
+            "effects_text": "紫圈",
+            "equip_text": "轻功+16, 意志+10, 经脉+10, 轻灵+0, 神行+0",
+            "force_name": "江湖",
+            "id": 1034,
+            "mana_cost": 0.0,
+            "max_use": 0,
+            "name": "驾雾腾云步",
+            "needs": "",
+            "rare_lv": 5,
+            "rare_name": "绝世",
+            "stats": {
+                "damage": [],
+                "equip": {
+                    "意志": 10,
+                    "神行": 0,
+                    "经脉": 10,
+                    "轻功": 16,
+                    "轻灵": 0
+                },
+                "upgrade": {
+                    "意志潜力": 1,
+                    "经脉": 2,
+                    "经脉潜力": 1,
+                    "轻功潜力": 1
+                },
+                "use": []
+            },
+            "type_name": "경공",
+            "upgrade_text": "轻功潜力+1, 意志潜力+1, 经脉潜力+1, 经脉+2",
+            "upgrade_total": 5.0,
+            "use_text": "",
+            "weapon": ""
+        },
+        {
+            "atk_posture": [],
+            "atk_range": "0-4",
+            "base_dmg": 0.0,
+            "def_posture": [],
+            "desc": "이 공법은 한 걸음 내딛는 것이 겉보기엔 아주 조금 움직인 듯하나，실은 수 장을 뛰어넘은 것이다. 적대하는 자에게 분명 지척에 있으나 영원히 닿을 수 없을 것 같은 절망감을 안겨준다",
+            "dmg_bonus_text": "",
+            "dmg_range": "",
+            "effects_text": "紫圈",
+            "equip_text": "轻功+12, 智力+12, 体质+12, 急速+0, 失衡+0",
+            "force_name": "江湖",
+            "id": 1035,
+            "mana_cost": 0.0,
+            "max_use": 0,
+            "name": "咫尺天涯",
+            "needs": "",
+            "rare_lv": 5,
+            "rare_name": "绝世",
+            "stats": {
+                "damage": [],
+                "equip": {
+                    "体质": 12,
+                    "失衡": 0,
+                    "急速": 0,
+                    "智力": 12,
+                    "轻功": 12
+                },
+                "upgrade": {
+                    "体质潜力": 1,
+                    "灵巧": 2,
+                    "灵巧潜力": 1,
+                    "轻功潜力": 1
+                },
+                "use": []
+            },
+            "type_name": "경공",
+            "upgrade_text": "轻功潜力+1, 灵巧潜力+1, 体质潜力+1, 灵巧+2",
+            "upgrade_total": 5.0,
+            "use_text": "",
+            "weapon": ""
+        },
+        {
+            "atk_posture": [],
+            "atk_range": "0-0",
+            "base_dmg": 0.0,
+            "def_posture": [],
+            "desc": "고승이 창안한 무공. 천지 음양의 두 기운을 비지쌍운(자비와 지혜를 함께 굴림)의 힘으로 조화시켜，마침내 무연대자(인연이 없는 자에게도 베푸는 자비)와 동체대비(만물을 한 몸으로 여기는 자비)의 경지에 이른다",
+            "dmg_bonus_text": "",
+            "dmg_range": "",
+            "effects_text": "护盾",
+            "equip_text": "绝技+12, 力道+12, 智力+12, 慧眼+0, 昏沉+0",
+            "force_name": "江湖",
+            "id": 1036,
+            "mana_cost": 0.0,
+            "max_use": 0,
+            "name": "阴阳大悲咒",
+            "needs": "",
+            "rare_lv": 5,
+            "rare_name": "绝世",
+            "stats": {
+                "damage": [],
+                "equip": {
+                    "力道": 12,
+                    "慧眼": 0,
+                    "昏沉": 0,
+                    "智力": 12,
+                    "绝技": 12
+                },
+                "upgrade": {
+                    "力道潜力": 1,
+                    "智力": 2,
+                    "智力潜力": 1,
+                    "绝技潜力": 1
+                },
+                "use": []
+            },
+            "type_name": "절기",
+            "upgrade_text": "绝技潜力+1, 力道潜力+1, 智力潜力+1, 智力+2",
+            "upgrade_total": 5.0,
+            "use_text": "",
+            "weapon": ""
+        },
+        {
+            "atk_posture": [],
+            "atk_range": "0-0",
+            "base_dmg": 0.0,
+            "def_posture": [],
+            "desc": "도가의 비술에서 유래하였다. 수련자는 일월의 정화와 오행의 영기를 몸 안으로 끌어들여야 한다. 대성한 뒤에는 일거수일투족이 천지와 같은 힘을 발휘한다",
+            "dmg_bonus_text": "",
+            "dmg_range": "",
+            "effects_text": "护盾",
+            "equip_text": "绝技+16, 意志+10, 经脉+10, 霸体+0, 不屈+0, 坚毅+0",
+            "force_name": "江湖",
+            "id": 1037,
+            "mana_cost": 0.0,
+            "max_use": 0,
+            "name": "太乙仙身",
+            "needs": "",
+            "rare_lv": 5,
+            "rare_name": "绝世",
+            "stats": {
+                "damage": [],
+                "equip": {
+                    "不屈": 0,
+                    "坚毅": 0,
+                    "意志": 10,
+                    "经脉": 10,
+                    "绝技": 16,
+                    "霸体": 0
+                },
+                "upgrade": {
+                    "灵巧潜力": 1,
+                    "经脉": 2,
+                    "经脉潜力": 1,
+                    "绝技潜力": 1
+                },
+                "use": []
+            },
+            "type_name": "절기",
+            "upgrade_text": "绝技潜力+1, 灵巧潜力+1, 经脉潜力+1, 经脉+2",
+            "upgrade_total": 5.0,
+            "use_text": "",
+            "weapon": ""
+        },
+        {
+            "atk_posture": [
+                12.0,
+                0.0,
+                0.0,
+                0.0,
+                6.0,
+                6.0
+            ],
+            "atk_range": "0-0",
+            "base_dmg": 25.0,
+            "def_posture": [
+                8.0,
+                0.0,
+                0.0,
+                0.0,
+                4.0,
+                4.0
+            ],
+            "desc": "전설에 따르면 여래불조가 중생을 구제하기 위해 속세에 내려준 장법이라 한다. 그 위력은 천재지변에 필적하니，참으로 속세의 것이라 믿기 어렵다",
+            "dmg_bonus_text": "역도(힘)3,체질1,권장2,내력0.4",
+            "dmg_range": "",
+            "effects_text": "佛压, 地爆",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1038,
+            "mana_cost": 35.0,
+            "max_use": 0,
+            "name": "如来神掌",
+            "needs": "",
+            "rare_lv": 5,
+            "rare_name": "绝世",
+            "stats": {
+                "damage": {
+                    "권장": 2,
+                    "내력": 0.4,
+                    "역도(힘)": 3,
+                    "체질": 1
+                },
+                "equip": [],
+                "upgrade": {
+                    "体质潜力": 1,
+                    "力道": 2,
+                    "力道潜力": 1,
+                    "拳掌潜力": 1
+                },
+                "use": {
+                    "动摇": 8,
+                    "眩晕": 8
+                }
+            },
+            "type_name": "권장",
+            "upgrade_text": "拳掌潜力+1, 力道潜力+1, 体质潜力+1, 力道+2",
+            "upgrade_total": 5.0,
+            "use_text": "眩晕+8%, 动摇+8%",
+            "weapon": "拳"
+        },
+        {
+            "atk_posture": [
+                0.0,
+                10.0,
+                10.0,
+                10.0,
+                0.0,
+                0.0
+            ],
+            "atk_range": "2-2",
+            "base_dmg": 22.0,
+            "def_posture": [
+                0.0,
+                5.0,
+                5.0,
+                5.0,
+                0.0,
+                0.0
+            ],
+            "desc": "천변만화를 다하고 반박귀진하여 한 손가락으로 응축했다. 수련자는 먼저 천하의 권장을 통달한 뒤，배운 것을 모두 잊어야만 비로소 이 초식의 진제를 깨달을 수 있다",
+            "dmg_bonus_text": "지력2,의지3,권장4,내력0.2",
+            "dmg_range": "",
+            "effects_text": "狂劈, 红花",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1039,
+            "mana_cost": 32.0,
+            "max_use": 0,
+            "name": "万化归一指",
+            "needs": "",
+            "rare_lv": 5,
+            "rare_name": "绝世",
+            "stats": {
+                "damage": {
+                    "권장": 4,
+                    "내력": 0.2,
+                    "의지": 3,
+                    "지력": 2
+                },
+                "equip": [],
+                "upgrade": {
+                    "意志": 2,
+                    "意志潜力": 1,
+                    "拳掌潜力": 1,
+                    "智力潜力": 1
+                },
+                "use": {
+                    "定身": 6,
+                    "腰腹点穴": 6,
+                    "腿足点穴": 6
+                }
+            },
+            "type_name": "권장",
+            "upgrade_text": "拳掌潜力+1, 智力潜力+1, 意志潜力+1, 意志+2",
+            "upgrade_total": 5.0,
+            "use_text": "定身+6%, 腿足点穴+6%, 腰腹点穴+6%",
+            "weapon": "拳"
+        },
+        {
+            "atk_posture": [
+                0.0,
+                13.0,
+                0.0,
+                13.0,
+                0.0,
+                0.0
+            ],
+            "atk_range": "0-0",
+            "base_dmg": 24.0,
+            "def_posture": [
+                0.0,
+                8.0,
+                0.0,
+                8.0,
+                0.0,
+                0.0
+            ],
+            "desc": "전설에 따르면 이 검법은 본래 15식이 있었으나，뒤의 두 초식이 비할 데 없이 흉악하고 살업이 너무 무거워 창안자가 파기해버렸고，결국 13식만 남았다고 한다",
+            "dmg_bonus_text": "역도(힘)2,경맥2,검법4,내력0.3",
+            "dmg_range": "",
+            "effects_text": "瞬杀, 爆血迹",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1040,
+            "mana_cost": 36.0,
+            "max_use": 0,
+            "name": "剑十三式",
+            "needs": "",
+            "rare_lv": 5,
+            "rare_name": "绝世",
+            "stats": {
+                "damage": {
+                    "검법": 4,
+                    "경맥": 2,
+                    "내력": 0.3,
+                    "역도(힘)": 2
+                },
+                "equip": [],
+                "upgrade": {
+                    "剑法潜力": 1,
+                    "力道潜力": 1,
+                    "经脉": 2,
+                    "经脉潜力": 1
+                },
+                "use": {
+                    "急速": 6,
+                    "截脉": 6,
+                    "断骨": 6
+                }
+            },
+            "type_name": "검법",
+            "upgrade_text": "剑法潜力+1, 力道潜力+1, 经脉潜力+1, 经脉+2",
+            "upgrade_total": 5.0,
+            "use_text": "急速+6%, 断骨+6%, 截脉+6%",
+            "weapon": "剑"
+        },
+        {
+            "atk_posture": [
+                9.0,
+                9.0,
+                9.0,
+                9.0,
+                9.0,
+                9.0
+            ],
+            "atk_range": "1-3",
+            "base_dmg": 18.0,
+            "def_posture": [
+                6.0,
+                6.0,
+                6.0,
+                6.0,
+                6.0,
+                6.0
+            ],
+            "desc": "세외 고수 독고검이 창안한 무상의 검법. 천하의 모든 초식을 타파할 수 있다고 일컬어진다",
+            "dmg_bonus_text": "지력4,의지3,검법5",
+            "dmg_range": "",
+            "effects_text": "墨圆斩, 爆叶",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1041,
+            "mana_cost": 25.0,
+            "max_use": 0,
+            "name": "独孤剑法",
+            "needs": "",
+            "rare_lv": 5,
+            "rare_name": "绝世",
+            "stats": {
+                "damage": {
+                    "검법": 5,
+                    "의지": 3,
+                    "지력": 4
+                },
+                "equip": [],
+                "upgrade": {
+                    "剑法潜力": 1,
+                    "意志潜力": 1,
+                    "智力": 2,
+                    "智力潜力": 1
+                },
+                "use": {
+                    "破招": 20,
+                    "连绵": 10
+                }
+            },
+            "type_name": "검법",
+            "upgrade_text": "剑法潜力+1, 智力潜力+1, 意志潜力+1, 智力+2",
+            "upgrade_total": 5.0,
+            "use_text": "破招+20%, 连绵+10%",
+            "weapon": "剑"
+        },
+        {
+            "atk_posture": [
+                10.0,
+                0.0,
+                15.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "atk_range": "1-3",
+            "base_dmg": 25.0,
+            "def_posture": [
+                6.0,
+                0.0,
+                9.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "desc": "유래를 알 수 없는 괴이한 도법. 초식을 하나 익힐 때마다 인성을 한 푼씩 잃게 되며，공력이 대성에 이르면 무욕무정의 무아지경에 빠지게 된다",
+            "dmg_bonus_text": "영교(민첩)4,의지3,도법2,내력0.1",
+            "dmg_range": "",
+            "effects_text": "墨爪爆, 真气",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1042,
+            "mana_cost": 34.0,
+            "max_use": 0,
+            "name": "无间魔刀",
+            "needs": "",
+            "rare_lv": 5,
+            "rare_name": "绝世",
+            "stats": {
+                "damage": {
+                    "내력": 0.1,
+                    "도법": 2,
+                    "영교(민첩)": 4,
+                    "의지": 3
+                },
+                "equip": [],
+                "upgrade": {
+                    "刀法潜力": 1,
+                    "意志潜力": 1,
+                    "灵巧": 2,
+                    "灵巧潜力": 1
+                },
+                "use": {
+                    "动摇": 6,
+                    "坚毅": 6,
+                    "混乱": 6
+                }
+            },
+            "type_name": "도법",
+            "upgrade_text": "刀法潜力+1, 灵巧潜力+1, 意志潜力+1, 灵巧+2",
+            "upgrade_total": 5.0,
+            "use_text": "坚毅+6%, 动摇+6%, 混乱+6%",
+            "weapon": "刀"
+        },
+        {
+            "atk_posture": [
+                0.0,
+                8.0,
+                0.0,
+                12.0,
+                8.0,
+                0.0
+            ],
+            "atk_range": "0-0",
+            "base_dmg": 24.0,
+            "def_posture": [
+                0.0,
+                4.0,
+                0.0,
+                4.0,
+                4.0,
+                0.0
+            ],
+            "desc": "멸문지화의 생존자가 창안한 무공. 매 도격이 생사의 갈림길을 맴도니，이른바 피로써 도에 제를 올리고 목숨을 걸고 싸우는 법이다. 도세가 흉험해질수록 반탄력 또한 격렬해진다",
+            "dmg_bonus_text": "체질3,경맥1,도법4,내력0.3",
+            "dmg_range": "",
+            "effects_text": "劈砍_红多重, 喷血",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1043,
+            "mana_cost": 30.0,
+            "max_use": 0,
+            "name": "生死劫刀法",
+            "needs": "",
+            "rare_lv": 5,
+            "rare_name": "绝世",
+            "stats": {
+                "damage": {
+                    "경맥": 1,
+                    "내력": 0.3,
+                    "도법": 4,
+                    "체질": 3
+                },
+                "equip": [],
+                "upgrade": {
+                    "体质": 2,
+                    "体质潜力": 1,
+                    "刀法潜力": 1,
+                    "经脉潜力": 1
+                },
+                "use": {
+                    "外伤": 6,
+                    "流血": 6,
+                    "疯魔": 6
+                }
+            },
+            "type_name": "도법",
+            "upgrade_text": "刀法潜力+1, 体质潜力+1, 经脉潜力+1, 体质+2",
+            "upgrade_total": 5.0,
+            "use_text": "疯魔+6%, 外伤+6%, 流血+6%",
+            "weapon": "刀"
+        },
+        {
+            "atk_posture": [
+                0.0,
+                15.0,
+                10.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "atk_range": "0-0",
+            "base_dmg": 22.0,
+            "def_posture": [
+                0.0,
+                8.0,
+                7.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "desc": "전설에 따르면 규룡이 아홉 번의 탈바꿈을 거쳐야 하듯，이 창술 또한 9중의 경지가 있다고 한다. 한 단계를 오를 때마다 위력이 한 층 더해지며，9중에 이르러 펼치면 경천동지하여 귀신조차 막아내기 어렵다",
+            "dmg_bonus_text": "영교(민첩)1,지력3,장병4,내력0.3",
+            "dmg_range": "",
+            "effects_text": "龙腾爆",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1044,
+            "mana_cost": 28.0,
+            "max_use": 0,
+            "name": "虬龙九变",
+            "needs": "",
+            "rare_lv": 5,
+            "rare_name": "绝世",
+            "stats": {
+                "damage": {
+                    "내력": 0.3,
+                    "영교(민첩)": 1,
+                    "장병": 4,
+                    "지력": 3
+                },
+                "equip": [],
+                "upgrade": {
+                    "智力": 2,
+                    "智力潜力": 1,
+                    "灵巧潜力": 1,
+                    "长兵潜力": 1
+                },
+                "use": {
+                    "弱点": 8,
+                    "慧眼": 8
+                }
+            },
+            "type_name": "장병",
+            "upgrade_text": "长兵潜力+1, 灵巧潜力+1, 智力潜力+1, 智力+2",
+            "upgrade_total": 5.0,
+            "use_text": "慧眼+8%, 弱点+8%",
+            "weapon": "长兵"
+        },
+        {
+            "atk_posture": [
+                8.0,
+                0.0,
+                0.0,
+                8.0,
+                8.0,
+                0.0
+            ],
+            "atk_range": "1-2",
+            "base_dmg": 25.0,
+            "def_posture": [
+                5.0,
+                0.0,
+                0.0,
+                5.0,
+                5.0,
+                0.0
+            ],
+            "desc": "서초패왕 항우가 해하에 고립되었을 때 깨달은 최후의 초식이라 전해지나，안타깝게도 그가 패망하면서 결국 실전되었다",
+            "dmg_bonus_text": "역도(힘)4,의지4,장병2,내력0.1",
+            "dmg_range": "",
+            "effects_text": "黄沙, 血爪爆",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1045,
+            "mana_cost": 31.0,
+            "max_use": 0,
+            "name": "十面埋伏",
+            "needs": "",
+            "rare_lv": 5,
+            "rare_name": "绝世",
+            "stats": {
+                "damage": {
+                    "내력": 0.1,
+                    "역도(힘)": 4,
+                    "의지": 4,
+                    "장병": 2
+                },
+                "equip": [],
+                "upgrade": {
+                    "力道潜力": 1,
+                    "意志": 2,
+                    "意志潜力": 1,
+                    "长兵潜力": 1
+                },
+                "use": {
+                    "壮骨": 6,
+                    "定神": 6,
+                    "死战": 6
+                }
+            },
+            "type_name": "장병",
+            "upgrade_text": "长兵潜力+1, 力道潜力+1, 意志潜力+1, 意志+2",
+            "upgrade_total": 5.0,
+            "use_text": "壮骨+6%, 定神+6%, 死战+6%",
+            "weapon": "长兵"
+        },
+        {
+            "atk_posture": [
+                0.0,
+                0.0,
+                7.0,
+                0.0,
+                7.0,
+                8.0
+            ],
+            "atk_range": "1-3",
+            "base_dmg": 21.0,
+            "def_posture": [
+                0.0,
+                0.0,
+                6.0,
+                0.0,
+                6.0,
+                7.0
+            ],
+            "desc": "철필로 구주 산하를 그리는 듯 펼쳐지는 기문 무학. 수련자가 천하를 가슴에 품어야만 진정한 묘리를 이끌어낼 수 있으며，그렇지 않으면 겉모습만 흉내 낼 뿐 그 신수를 터득할 수 없다",
+            "dmg_bonus_text": "지력4,기문4,내력0.2",
+            "dmg_range": "",
+            "effects_text": "墨烟, 墨圈",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1046,
+            "mana_cost": 29.0,
+            "max_use": 0,
+            "name": "山河社稷笔",
+            "needs": "",
+            "rare_lv": 5,
+            "rare_name": "绝世",
+            "stats": {
+                "damage": {
+                    "기문": 4,
+                    "내력": 0.2,
+                    "지력": 4
+                },
+                "equip": [],
+                "upgrade": {
+                    "奇门潜力": 1,
+                    "智力潜力": 1,
+                    "经脉": 2,
+                    "经脉潜力": 1
+                },
+                "use": {
+                    "头颈点穴": 6,
+                    "笨拙": 6,
+                    "醒脑": 6
+                }
+            },
+            "type_name": "기문",
+            "upgrade_text": "奇门潜力+1, 智力潜力+1, 经脉潜力+1, 经脉+2",
+            "upgrade_total": 5.0,
+            "use_text": "醒脑+6%, 头颈点穴+6%, 笨拙+6%",
+            "weapon": "笔"
+        },
+        {
+            "atk_posture": [
+                0.0,
+                0.0,
+                12.0,
+                14.0,
+                0.0,
+                0.0
+            ],
+            "atk_range": "1-2",
+            "base_dmg": 24.0,
+            "def_posture": [
+                0.0,
+                0.0,
+                6.0,
+                9.0,
+                0.0,
+                0.0
+            ],
+            "desc": "이 편법은 그 힘과 속도가 지극히 패도적이다. 한 번 채찍을 휘두르면 구천에 용이 우는 듯 수십 리 밖까지 소리가 들리며，곁에 있는 자들은 진룡이 현세에 강림한 줄 안다 하여 이런 이름이 붙었다",
+            "dmg_bonus_text": "영교(민첩)2,체질3,기문2,내력0.3",
+            "dmg_range": "",
+            "effects_text": "腾龙, 劈砍_黄裂地",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1047,
+            "mana_cost": 32.0,
+            "max_use": 0,
+            "name": "真龙霹雳鞭",
+            "needs": "",
+            "rare_lv": 5,
+            "rare_name": "绝世",
+            "stats": {
+                "damage": {
+                    "기문": 2,
+                    "내력": 0.3,
+                    "영교(민첩)": 2,
+                    "체질": 3
+                },
+                "equip": [],
+                "upgrade": {
+                    "体质": 2,
+                    "体质潜力": 1,
+                    "奇门潜力": 1,
+                    "灵巧潜力": 1
+                },
+                "use": {
+                    "坚毅": 8,
+                    "重碾": 8
+                }
+            },
+            "type_name": "기문",
+            "upgrade_text": "奇门潜力+1, 灵巧潜力+1, 体质潜力+1, 体质+2",
+            "upgrade_total": 5.0,
+            "use_text": "坚毅+8%, 重碾+8%",
+            "weapon": "鞭"
+        },
+        {
+            "atk_posture": [
+                10.0,
+                0.0,
+                0.0,
+                10.0,
+                8.0,
+                0.0
+            ],
+            "atk_range": "2-5",
+            "base_dmg": 23.0,
+            "def_posture": [
+                4.0,
+                0.0,
+                0.0,
+                4.0,
+                4.0,
+                0.0
+            ],
+            "desc": "강호에 떠도는 소문에 이 부적에 맞은 자는 절대 살아남을 길이 없다 하니，참으로 염라대왕이 삼경에 죽으라 하면 오경까지 살려두지 않는다는 말과 같다",
+            "dmg_bonus_text": "영교(민첩)1,경맥3,사술2,내력0.3",
+            "dmg_range": "",
+            "effects_text": "多重暗影",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1048,
+            "mana_cost": 33.0,
+            "max_use": 0,
+            "name": "催命符",
+            "needs": "",
+            "rare_lv": 5,
+            "rare_name": "绝世",
+            "stats": {
+                "damage": {
+                    "경맥": 3,
+                    "내력": 0.3,
+                    "사술": 2,
+                    "영교(민첩)": 1
+                },
+                "equip": [],
+                "upgrade": {
+                    "射术潜力": 1,
+                    "灵巧": 2,
+                    "灵巧潜力": 1,
+                    "经脉潜力": 1
+                },
+                "use": {
+                    "毒素": 6,
+                    "脆弱": 6,
+                    "迟缓": 6
+                }
+            },
+            "type_name": "사술",
+            "upgrade_text": "射术潜力+1, 灵巧潜力+1, 经脉潜力+1, 灵巧+2",
+            "upgrade_total": 5.0,
+            "use_text": "毒素+6%, 迟缓+6%, 脆弱+6%",
+            "weapon": ""
+        },
+        {
+            "atk_posture": [
+                0.0,
+                14.0,
+                14.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "atk_range": "0-0",
+            "base_dmg": 26.0,
+            "def_posture": [
+                0.0,
+                6.0,
+                6.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "desc": "상고 시대부터 전해진 초식으로，온몸의 힘과 기백을 한 점에 집중시켜 경천동지하고 귀곡신호(귀신이 곡을 하고 신이 울부짖음)하는 화살을 쏘아낸다",
+            "dmg_bonus_text": "역도(힘)3,체질2,사술1,내력0.1",
+            "dmg_range": "",
+            "effects_text": "烈日, 岩浆喷",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1049,
+            "mana_cost": 36.0,
+            "max_use": 0,
+            "name": "后羿射日",
+            "needs": "",
+            "rare_lv": 5,
+            "rare_name": "绝世",
+            "stats": {
+                "damage": {
+                    "내력": 0.1,
+                    "사술": 1,
+                    "역도(힘)": 3,
+                    "체질": 2
+                },
+                "equip": [],
+                "upgrade": {
+                    "体质潜力": 1,
+                    "力道": 2,
+                    "力道潜力": 1,
+                    "射术潜力": 1
+                },
+                "use": {
+                    "击退": 300,
+                    "破甲": 6,
+                    "裂膝": 6
+                }
+            },
+            "type_name": "사술",
+            "upgrade_text": "射术潜力+1, 力道潜力+1, 体质潜力+1, 力道+2",
+            "upgrade_total": 5.0,
+            "use_text": "破甲+6%, 裂膝+6%, 击退+300%",
+            "weapon": "弓"
+        },
+        {
+            "atk_posture": [
+                20.0,
+                0.0,
+                10.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "atk_range": "2-3",
+            "base_dmg": 27.0,
+            "def_posture": [
+                5.0,
+                0.0,
+                5.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "desc": "백운천이 창안한 기이한 검초. 허공으로 도약한 뒤 높은 곳에서 아래를 향해 펼쳐야 하며，떨어지는 기세를 빌린 예봉은 막아내기 어려우나，막대한 내력을 소모하게 된다",
+            "dmg_bonus_text": "역도(힘)2,경공4,검법3,내력0.2",
+            "dmg_range": "",
+            "effects_text": "剑雨, 星落",
+            "equip_text": "",
+            "force_name": "江湖",
+            "id": 1050,
+            "mana_cost": 50.0,
+            "max_use": 0,
+            "name": "星落九天",
+            "needs": "",
+            "rare_lv": 5,
+            "rare_name": "绝世",
+            "stats": {
+                "damage": {
+                    "검법": 3,
+                    "경공": 4,
+                    "내력": 0.2,
+                    "역도(힘)": 2
+                },
+                "equip": [],
+                "upgrade": {
+                    "剑法潜力": 1,
+                    "力道潜力": 1,
+                    "经脉潜力": 1,
+                    "轻功潜力": 1
+                },
+                "use": {
+                    "暴击": 8,
+                    "穿甲": 8
+                }
+            },
+            "type_name": "검법",
+            "upgrade_text": "轻功潜力+1, 剑法潜力+1, 力道潜力+1, 经脉潜力+1",
+            "upgrade_total": 4.0,
+            "use_text": "暴击+8%, 穿甲+8%",
+            "weapon": "剑"
         }
     ],
     "source": "MT.data.loadSkillsFull()",

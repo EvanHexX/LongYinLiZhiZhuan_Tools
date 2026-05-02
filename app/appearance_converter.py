@@ -14,7 +14,7 @@ from PySide6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QPushButton,
 from PySide6.QtGui import QGuiApplication  # ✅ 클립보드 사용을 위해 추가
 from PySide6.QtCore import Qt
 
-# ✅ 사용자 환경에 맞춘 경로 설정
+# 경로 설정
 DATA_FILE_PATH = "../data/appearance_data.csv"
 
 

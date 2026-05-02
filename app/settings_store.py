@@ -10,8 +10,8 @@ SETTINGS_PATH = CONFIG_DIR / "settings.json"
 
 
 DEFAULT_SETTINGS = {
-    "json_path": "data/martial_skills.json",
-    "dict_path": "data/kr_dict.lua",
+    "db_path": "data/skills_kr.db",
+    "custom_id_min": 1000,
 }
 
 
