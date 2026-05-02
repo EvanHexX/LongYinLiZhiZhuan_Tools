@@ -335,7 +335,7 @@ class MainWindow(QMainWindow):
         log_v_layout.setContentsMargins(10, contents_margin_top, 0, contents_margin_bottom)
         log_v_layout.setSpacing(5)
         # 로그 텍스트
-        self.log_label = QLabel("비급 최적화 도구 1.3.14")                # 로그 표시용
+        self.log_label = QLabel("비급 최적화 도구 1.4.07")                # 로그 표시용
         self.status_label = QLabel("데이터를 로드하세요.")       # 상태라벨
         self.status_label.setStyleSheet("color: #aaaaaa; font-weight: bold;")
         # 스테이터스 텍스트가 가능한 많은 가로 공간을 차지하도록 설정
