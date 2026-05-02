@@ -301,46 +301,6 @@
             "weapon": ""
         },
         {
-            "atk_posture": [],
-            "atk_range": "0-0",
-            "base_dmg": 0.0,
-            "def_posture": [],
-            "desc": "아미파가 획득한 용윤귀장공(龍胤歸藏功)의 일부로，\\n내용이 적어 아미의 심법을 대거 융합시킨 것이다.\\n수련자의 행동 민첩성을 향상시킬 수 있다.",
-            "dmg_bonus_text": "",
-            "dmg_range": "",
-            "effects_text": "真气喷",
-            "equip_text": "生命上限+50, 内力上限+60, 内功+4, 灵巧+4, 经脉+4, 意志+2, 通脉+0",
-            "force_name": "峨眉派",
-            "id": 801,
-            "mana_cost": 0.0,
-            "max_use": 0,
-            "name": "峨眉归藏功",
-            "needs": "",
-            "rare_lv": 1,
-            "rare_name": "进阶",
-            "stats": {
-                "damage": [],
-                "equip": {
-                    "内力上限": 60,
-                    "内功": 4,
-                    "意志": 2,
-                    "灵巧": 4,
-                    "生命上限": 50,
-                    "经脉": 4,
-                    "通脉": 0
-                },
-                "upgrade": {
-                    "灵巧潜力": 1
-                },
-                "use": []
-            },
-            "type_name": "내공",
-            "upgrade_text": "灵巧潜力+1",
-            "upgrade_total": 1.0,
-            "use_text": "",
-            "weapon": ""
-        },
-        {
             "atk_posture": [
                 0,
                 0,
@@ -38141,30 +38101,38 @@
             "atk_range": "0-0",
             "base_dmg": 0.0,
             "def_posture": [],
-            "desc": "아미귀장공 설명",
+            "desc": "아미파가 획득한 용윤귀장공(龍胤歸藏功)의 일부로，\\n내용이 적어 아미의 심법을 대거 융합시킨 것이다.\\n수련자의 행동 민첩성을 향상시킬 수 있다.",
             "dmg_bonus_text": "",
-            "dmg_range": "0-0",
-            "effects_text": "",
-            "equip_text": "생명상한+50, 내공상한+60, 내공+4, 민첩+4, 경맥+4, 통맥+6%",
-            "force_name": "아미파",
+            "dmg_range": "",
+            "effects_text": "真气喷",
+            "equip_text": "生命上限+50, 内力上限+60, 内功+4, 灵巧+4, 经脉+4, 意志+2, 通脉+0",
+            "force_name": "峨眉派",
             "id": 801,
-            "mana_cost": 0,
+            "mana_cost": 0.0,
             "max_use": 0,
-            "name": "아미귀장공",
-            "needs": "민첩10/의지5/내공15",
-            "rare_lv": 5,
-            "rare_name": "진급",
+            "name": "峨眉归藏功",
+            "needs": "",
+            "rare_lv": 1,
+            "rare_name": "进阶",
             "stats": {
-                "damage": {},
-                "equip": [],
+                "damage": [],
+                "equip": {
+                    "内力上限": 60,
+                    "内功": 4,
+                    "意志": 2,
+                    "灵巧": 4,
+                    "生命上限": 50,
+                    "经脉": 4,
+                    "通脉": 0
+                },
                 "upgrade": {
                     "灵巧潜力": 1
                 },
-                "use": {}
+                "use": []
             },
-            "type_name": "절기",
+            "type_name": "내공",
             "upgrade_text": "灵巧潜力+1",
-            "upgrade_total": 1,
+            "upgrade_total": 1.0,
             "use_text": "",
             "weapon": ""
         },
@@ -47041,53 +47009,6 @@
             "type_name": "내공",
             "upgrade_text": "智力潜力+2, 意志潜力+1, 经脉潜力+1",
             "upgrade_total": 4.0,
-            "use_text": "",
-            "weapon": ""
-        },
-        {
-            "atk_posture": [],
-            "atk_range": "0-0",
-            "base_dmg": 0.0,
-            "def_posture": [],
-            "desc": "조윤종(趙胤宗)이 창시한 것으로，\\n현묘함이 비할 데 없고 위력이 무궁하다。수련자의 체백(體魄)과 경맥을 천인(天人) 경지까지 끌어올려 경천위지(經天緯地)의 능력을 얻게 하니，\\n당세 제일 내공이라 일컬어진다。",
-            "dmg_bonus_text": "",
-            "dmg_range": "",
-            "effects_text": "真气喷",
-            "equip_text": "生命上限+150, 内力上限+300, 内功+10, 力道+10, 灵巧+10, 智力+10, 意志+10, 体质+10, 经脉+10",
-            "force_name": "江湖",
-            "id": 995,
-            "mana_cost": 0.0,
-            "max_use": 0,
-            "name": "龙胤归藏功",
-            "needs": "",
-            "rare_lv": 5,
-            "rare_name": "绝世",
-            "stats": {
-                "damage": [],
-                "equip": {
-                    "体质": 10,
-                    "内力上限": 300,
-                    "内功": 10,
-                    "力道": 10,
-                    "意志": 10,
-                    "智力": 10,
-                    "灵巧": 10,
-                    "生命上限": 150,
-                    "经脉": 10
-                },
-                "upgrade": {
-                    "体质潜力": 1,
-                    "力道潜力": 1,
-                    "意志潜力": 1,
-                    "智力潜力": 1,
-                    "灵巧潜力": 1,
-                    "经脉潜力": 1
-                },
-                "use": []
-            },
-            "type_name": "내공",
-            "upgrade_text": "力道潜力+1, 灵巧潜力+1, 智力潜力+1, 意志潜力+1, 体质潜力+1, 经脉潜力+1",
-            "upgrade_total": 6.0,
             "use_text": "",
             "weapon": ""
         },
