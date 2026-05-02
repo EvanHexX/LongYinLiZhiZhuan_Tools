@@ -11,7 +11,7 @@ SETTINGS_PATH = CONFIG_DIR / "settings.json"
 
 DEFAULT_SETTINGS = {
     "db_path": "data/skills_kr.db",
-    "custom_id_min": 1000,
+    "custom_id_min": 1051,
 }
 
 

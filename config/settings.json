@@ -1,6 +1,6 @@
 {
   "db_path": "data/skills_kr.db",
-  "custom_id_min": 1000,
+  "custom_id_min": 1051,
   "json_path": "data/martial_skills.json",
   "dict_path": "data/kr_dict.lua"
 }

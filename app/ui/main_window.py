@@ -426,8 +426,8 @@ class MainWindow(QMainWindow):
 
         # ── 커스텀 ID 시작값
         custom_id_spin = _QSpinBox()
-        custom_id_spin.setRange(0, 9_999_999)
-        custom_id_spin.setValue(self.settings.get("custom_id_min", 1000))
+        custom_id_spin.setRange(self.settings.get("custom_id_min", 1051), 9_999_999)
+        custom_id_spin.setValue(self.settings.get("custom_id_min", 1051))
         custom_id_spin.setToolTip(
             "이 값 이상의 ID를 가진 비급은 '커스텀 데이터'로 간주되어 DB 관리 창에서 삭제할 수 있습니다."
         )
